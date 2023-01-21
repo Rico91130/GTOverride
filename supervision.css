@@ -27,11 +27,11 @@
       padding: 30px 0;
   }
 
-  .copyIcon:before {
+  .copyIcon:after {
       content: " 💾";
   }
 
-  .copyIcon.disable:before {
+  .copyIcon.disable:after {
       content: "";
   }
 
