@@ -913,7 +913,7 @@ function initialize() {
         <span>Patientez svp... les actions sont désactivées pour le moment.</span>
         <div class="progressbar"><span class="progress"></span><div class="counter">0%</div></div>
         <span class='title'></span>
-    </div>ss
+    </div>
     <nav class='interact'>
         <menu>
             <menuitem id="perimetreList">
