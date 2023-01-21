@@ -1,4 +1,5 @@
 const ENVIRONMENT = document.location.origin;
+const EXTERNAL_RESSOURCES = "https://rico91130.github.io/GTOverride/";
 
 const FOLDER_STATUS = ["OK", "SENT", "PENDING", "HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SI_RECEIVED", "IN_PROGRESS", "ADD_AWAITING", "REFUSED", "DONE", "CLOSED", "ARCHIVED", "CANCELLED", "SI_INTG_ERROR", "ERROR"];
 const FOLDER_TIME_DIVISIONS = [];
@@ -897,337 +898,22 @@ const CustomProgressbarManager_queuedFetch = (function () {
 
 function initialize() {
 
+    var head  = document.getElementsByTagName('head')[0];
+    var link  = document.createElement('link');
+    link.rel  = 'stylesheet';
+    link.type = 'text/css';
+    link.href = EXTERNAL_RESSOURCES + "/supervision.css";
+    link.media = 'all';
+    head.appendChild(link);
+
     Progressbar.setManager(CustomProgressbarManager_queuedFetch);
-
-    var style = document.createElement('style');
-    style.type = 'text/css';
-    style.innerHTML = `*{
-        box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-    }
-
-    body{
-        background: rgba( 71, 147, 227, 1);
-        -webkit-font-smoothing: antialiased;
-    }
-
-    body * {
-        margin:0;
-        padding:0;
-     }
-
-    div {
-        font-family: Helvetica;
-    }
-
-    h2{
-        text-align: center;
-        font-size: 18px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: white;
-        padding: 30px 0;
-    }
-    
-    .copyIcon:before {
-        content: " 💾";
-    }
-
-    .copyIcon.disable:before {
-        content: "";
-    }
-
-    .reloadIcon:before {
-        content: " 🔄";
-    }
-
-    .reloadIcon.disable:before {
-        content: "";
-    }
-
-    .menuBar {
-        clear:both;
-        margin-top:10px;
-        margin-bottom:10px;
-        padding-left:20px;
-    }
-
-    .menuBar .button.disable {
-        display:none;
-    }
-
-    .menuBar .button {
-        display:inline-block;
-        border:1px solid #ffffff;
-        border-radius: 5px;
-        color: #ffffff;
-        background: #ffffff8c;
-        padding: 5px 15px;
-        text-align: center;
-        font-size:1.2em;
-        cursor:pointer;
-        vertical-align:middle;
-        margin-right: 5px;
-        margin-top:5px;
-    }
-
-    .menuBar .demarcheName, .menuBar .subTitle {
-        display:inline-block;
-        padding: 5px 15px;
-        font-size:1.2em;
-        vertical-align:middle;
-        background: white;
-        border-radius: 5px;
-        color: grey;
-        margin-right: 5px;
-        margin-top:5px;
-    } 
-
-    .menuBar .subTitle.small {
-        background:#efefa0;
-        font-size:0.8em;
-    }
-
-    .menuBar .demarcheName {
-        font-weight:bold;
-        margin-top:10px;
-    }
-
-
-    #waitingMessage.disable {
-        display:block;
-    }
-
-    #waitingMessage {
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
-        border-radius: 5px;
-        position:fixed;
-        background-color:white;
-        left:50%;
-        width:700px;
-        transform: translate(-50%, 0%);
-        vertical-align:middle;
-        text-align:center;
-        align:center;
-        z-index:10;
-        height:150px;
-        display: none;
-        padding-top:15px;
-    }
-
-    #waitingMessage .title {
-        font-style:italic
-    }
-
-    /* Table Styles */
-    
-    .table-wrapper{
-        margin: 10px 20px 25px;
-        box-shadow: 0px 2px 4px rgb(0 0 0 / 50%)
-    }
-    
-    .fl-table {
-        border-radius: 5px;
-        font-size: 11px;
-        font-weight: normal;
-        border: none;
-        border-collapse: collapse;
-        width: 100%;
-        max-width: 100%;
-        white-space: nowrap;
-        background-color: white;
-    }
-    
-    .fl-table td, .fl-table th {
-        text-align: center;
-        padding: 4px;
-        height : 40px;
-    }
-        
-    .fl-table tr td:nth-child(1), .fl-table thead th {
-        color: #ffffff;
-        background: #4a7097;
-        font-size: 11px;
-    }
-
-    .fl-table td {
-        font-size: 12px;
-    }
-
-    .fl-table tr td:nth-child(1) {
-        width:115px;
-    }
-
-    .fl-table td.highlight {
-        background-color: #ffd3cf;
-    }
-
-    .fl-table td.alert {
-        background-color: #e43535;
-        color : #ffffff;
-        font-weight : bold;
-        cursor: pointer;
-    }
-
-    .fl-table.folders td.alert.disable:after {
-        content: "";
-    }
-
-    .fl-table.folders td.alert:after {
-        content: " 💾";
-    }
-
-    .fl-table tr:nth-child(even) {
-        background: #F8F8F8;
-    }
-    
-    /*
-     * Menu
-     */
-
-    nav.disable {
-        visibility:hidden;
-    }
-
-    nav menuitem {
-        position:relative;
-        display:block;
-        opacity:0;
-        cursor:pointer;
-     }
-     
-     nav menuitem > menu {
-        position: absolute;
-        pointer-events:none;
-     }
-     nav > menu { display:flex; }
-     
-     nav > menu > menuitem { pointer-events: all; opacity:1; }
-     menu menuitem a { white-space:nowrap; display:block; }
-        
-     menuitem:hover > menu {
-        pointer-events:initial;
-     }
-     menuitem:hover > menu > menuitem,
-     menu:hover > menuitem{
-        opacity:1;
-     }
-     nav > menu > menuitem menuitem menu {
-        transform:translateX(100%);
-        top:0; right:0;
-     }
-     /* User Styles Below Not Required */
-     
-     nav { 
-        margin-top: 10px;
-        margin-left: 20px;
-     }
-     
-     nav a {
-        background:#4a7097;
-        color:#FFF;
-        min-width:190px;
-        transition: background 0.5s, color 0.5s, transform 0.5s;
-        margin:0px 6px 6px 0px;
-        padding:20px 40px;
-        box-sizing:border-box;
-        border-radius:3px;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
-        position:relative;
-     }
-     
-     nav a:hover:before {
-        content: '';
-        top:0;left:0;
-        position:absolute;
-        background:rgba(0, 0, 0, 0.2);
-        width:100%;
-        height:100%;
-     }
-     
-     nav > menu > menuitem > a + menu:after{
-        content: '';
-        position:absolute;
-        border:10px solid transparent;
-        border-top: 10px solid white;
-        left:12px;
-        top: -40px;  
-     }
-     nav menuitem > menu > menuitem > a + menu:after{ 
-        content: '';
-        position:absolute;
-        border:10px solid transparent;
-        border-left: 10px solid white;
-        top: 20px;
-        left:-180px;
-        transition: opacity 0.6, transform 0s;
-     }
-     
-     nav > menu > menuitem > menu > menuitem{
-        transition: transform 0.6s, opacity 0.6s;
-        transform:translateY(150%);
-        opacity:0;
-     }
-     nav > menu > menuitem:hover > menu > menuitem,
-     nav > menu > menuitem.hover > menu > menuitem{
-        transform:translateY(0%);
-        opacity: 1;
-     }
-     
-     menuitem > menu > menuitem > menu > menuitem{
-        transition: transform 0.6s, opacity 0.6s;
-        transform:translateX(195px) translateY(0%);
-        opacity: 0;
-     } 
-     menuitem > menu > menuitem:hover > menu > menuitem,  
-     menuitem > menu > menuitem.hover > menu > menuitem{  
-        transform:translateX(0) translateY(0%);
-        opacity: 1;
-     }
-
-    /* 
-     * Progress bar
-     */
-    .counter {
-        position: relative;
-        font-size:15px;
-        margin-top:5px;
-    }
-    .progressbar {
-        box-shadow: 0 0 2px #000000;
-        border-radius:5px;
-        position: relative;
-        max-width: 500px;
-        width: 100%;
-        margin: 20px auto 20px;
-        height: 30px;
-        background: #f2f2f2;
-        overflow: hidden;
-      }
-      
-     span.progress {
-        position: absolute;
-        border-radius:5px;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 0;
-        background: #81e296;
-        transition: all .3s;
-      }
-        
-    `;
-
-    document.getElementsByTagName('head')[0].appendChild(style);
-    document.body.innerHTML = "";
 
     /* Construction du menu */
     var menuHTML = `<div id='waitingMessage' class='interact'>
         <span>Patientez svp... les actions sont désactivées pour le moment.</span>
         <div class="progressbar"><span class="progress"></span><div class="counter">0%</div></div>
         <span class='title'></span>
-    </div>
+    </div>ss
     <nav class='interact'>
         <menu>
             <menuitem id="perimetreList">
@@ -1252,6 +938,7 @@ function loadPerimeter(index)
         document.body.children[2].remove();
 
     displayPerimeter.apply(null, CONFIG.GLOBAL.perimeters[index].demarches);
+    
 }
 
 initialize();
