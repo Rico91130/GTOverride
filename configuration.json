@@ -84,9 +84,9 @@
             "HUBEE_RECEIVED": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
             "HUBEE_NOTIFIED": ["TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
             "SI_RECEIVED": ["TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "DONE": ["TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "REFUSED": ["TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "CLOSED": ["TD_beforeYesterday", "TD_next30days", "TD_remainingDays"]
+            "DONE": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
+            "REFUSED": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
+            "CLOSED": ["TD_next7days", "TD_next30days", "TD_remainingDays"]
         }
     },
     "DICPE": {
