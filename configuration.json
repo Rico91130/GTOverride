@@ -38,12 +38,30 @@
                         { "name": "Démarches Vanessa", "demarches": ["MD", "CR", "OperationTranquilliteVacances", "pub-changement-nom", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] }]
     },
     "CR" : {
+        "highlight" : {
+            "ERROR": ["*"],
+            "SI_INTG_ERROR": ["*"],
+            "PENDING": ["*"],
+            "HUBEE_RECEIVED": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
+            "HUBEE_NOTIFIED": ["TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
+            "SI_RECEIVED": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
+            "IN_PROGRESS": ["TD_next30days", "TD_remainingDays"]
+        },
         "notifications" : {
             "monitorNotifications" : true,
             "folderStatusToUse" : ["IN_PROGRESS", "ERROR", "SI_INTG_ERROR", "DONE", "REFUSED"]
         }
     },
     "MD" : {
+        "highlight" : {
+            "ERROR": ["*"],
+            "SI_INTG_ERROR": ["*"],
+            "PENDING": ["*"],
+            "HUBEE_RECEIVED": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
+            "HUBEE_NOTIFIED": ["TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
+            "SI_RECEIVED": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
+            "IN_PROGRESS": ["TD_next30days", "TD_remainingDays"]
+        },
         "notifications" : {
             "monitorNotifications" : true,
             "folderStatusToUse" : ["IN_PROGRESS", "ERROR", "SI_INTG_ERROR", "DONE", "REFUSED"]
