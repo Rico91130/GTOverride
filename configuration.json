@@ -88,7 +88,7 @@
             "REFUSED": ["TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
             "CLOSED": ["TD_beforeYesterday", "TD_next30days", "TD_remainingDays"]
         }
-    }
+    },
     "DICPE": {
         "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
     },
