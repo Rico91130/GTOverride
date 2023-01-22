@@ -1,0 +1,77 @@
+{
+    "GLOBAL": {
+        "DEFAULT_MODEL": {
+            "status": ["*"],
+            "highlights": {
+                "ERROR": ["*"],
+                "SI_INTG_ERROR": ["*"],
+                "PENDING": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
+                "HUBEE_RECEIVED": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
+                "HUBEE_NOTIFIED": ["TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
+                "SI_RECEIVED": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
+                "IN_PROGRESS": ["TD_next30days", "TD_remainingDays"]
+            },
+            "notifications" : {
+                "monitorNotifications" : false,
+                "folderStatusToUse" : ["ERROR", "SI_INTG_ERROR", "DONE", "REFUSED", "ADD_AWAITING"]
+            }
+        },
+        "GTpageSizeLimit" : 1000,
+        "notificationStatusToMonitor" : ["ERROR", "PENDING"],
+        "detailsBatchSize": 1000,
+        "notificationsSize" : 1000,
+        "notificationExportData" : [    "codeDemarche", 
+                                        "idDemarche",
+                                        "creationDate",
+                                        "caseCurrentStatus",
+                                        "caseNewStatus",
+                                        {"key" : "attachments", "alias" : "Nb PJ", "value" : "%.length"},
+                                        {"key" : "status", "alias" : "Notification"},
+                                        {"key" : "uploadDocumentAction", "alias" : "Documents"},
+                                        {"key" : "updateStatusAction", "alias" : "Fil d'activité"},
+                                        {"key" : "emailAction", "alias" : "Email"},
+                                        "nbRetry",
+                                        "lastStatusUpdate",
+                                        "updateStatusError"],
+        "disableComputeForTimeDivision": ["TD_next30days", "TD_remainingDays"],
+        "perimeters": [ { "name": "Démarches Eric", "demarches": ["DICPE", "EICPE", "DAENV", "DIOTA", "FCB", "arnaqueInternet"] },
+                        { "name": "Démarches Vanessa", "demarches": ["MD", "CR", "OperationTranquilliteVacances", "pub-changement-nom", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] }]
+    },
+    "CR" : {
+        "notifications" : {
+            "monitorNotifications" : true,
+            "folderStatusToUse" : ["IN_PROGRESS", "ERROR", "SI_INTG_ERROR", "DONE", "REFUSED"]
+        }
+    },
+    "MD" : {
+        "notifications" : {
+            "monitorNotifications" : true,
+            "folderStatusToUse" : ["IN_PROGRESS", "ERROR", "SI_INTG_ERROR", "DONE", "REFUSED"]
+        }
+    },
+    "DICPE": {
+        "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
+    },
+    "EICPE": {
+        "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
+    },
+    "DAENV": {
+        "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
+    },
+    "DIOTA": {
+        "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
+    },
+    "arnaqueInternet": {
+        "alias": "Arnaque Internet",
+        "notifications" : {
+            "monitorNotifications" : true,
+            "folderStatusToUse" : ["ERROR", "DONE", "REFUSED", "ADD_AWAITING"]
+        }
+    },
+    "FCB": {
+        "notifications" : {
+            "monitorNotifications" : true,
+            "folderStatusToUse" : ["ERROR", "DONE", "REFUSED", "CLOSED"]
+        }
+    }
+}
