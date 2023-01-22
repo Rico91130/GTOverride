@@ -1,6 +1,12 @@
 const ENVIRONMENT = document.location.origin;
 const EXTERNAL_RESSOURCES = "https://rico91130.github.io/GTOverride/";
 
+const QUERY_GETFOLDERS = ENVIRONMENT + "/gtconsole/folders?id=&startDate=&endDate=&startTime=&endTime=&code=%%DEMARCHE%%&status=%%STATUS%%&siret=&guichet=&caseStatus=&notificationStatus=%%NOTIFICATIONSTATUS%%&lastUpdateStartDate=%%STARTDATE%%&lastUpdateEndDate=%%ENDDATE%%&page=%%PAGE%%&pageSize=%%PAGESIZE%%";
+const QUERY_GETSENDINGS = ENVIRONMENT + "/gtconsole/folders/%%FOLDERID%%/sendings";
+const QUERY_GETNOTIFICATIONS = ENVIRONMENT + "/gtconsole/sendings/%%SENDINGID%%/notifications";
+
+var CONFIG = {}
+
 const FOLDER_STATUS = ["OK", "SENT", "PENDING", "HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SI_RECEIVED", "IN_PROGRESS", "ADD_AWAITING", "REFUSED", "DONE", "CLOSED", "ARCHIVED", "CANCELLED", "SI_INTG_ERROR", "ERROR"];
 const FOLDER_TIME_DIVISIONS = [];
 
@@ -153,7 +159,6 @@ debutH.setSeconds(0);
 debutH.setMilliseconds(0);
 debutH.setTime(debutH.getTime() + 60*60*1000);
 
-
 var debutPlage = null;
 var finPlage = null;
 
@@ -249,91 +254,8 @@ const NOTIFICATIONS_DATAS = {
         });
         
         return notifications.sort((a,b) => { return helper.GTDate2JSDate(b.creationDate) - helper.GTDate2JSDate(a.creationDate)});
-
     }
 };
-
-const QUERY_GETFOLDERS = ENVIRONMENT + "/gtconsole/folders?id=&startDate=&endDate=&startTime=&endTime=&code=%%DEMARCHE%%&status=%%STATUS%%&siret=&guichet=&caseStatus=&notificationStatus=%%NOTIFICATIONSTATUS%%&lastUpdateStartDate=%%STARTDATE%%&lastUpdateEndDate=%%ENDDATE%%&page=%%PAGE%%&pageSize=%%PAGESIZE%%";
-const QUERY_GETSENDINGS = ENVIRONMENT + "/gtconsole/folders/%%FOLDERID%%/sendings";
-const QUERY_GETNOTIFICATIONS = ENVIRONMENT + "/gtconsole/sendings/%%SENDINGID%%/notifications";
-
-const CONFIG = {
-    "GLOBAL": {
-        "DEFAULT_MODEL": {
-            "status": ["*"],
-            "highlights": {
-                "ERROR": ["*"],
-                "SI_INTG_ERROR": ["*"],
-                "PENDING": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-                "HUBEE_RECEIVED": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-                "HUBEE_NOTIFIED": ["TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-                "SI_RECEIVED": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
-                "IN_PROGRESS": ["TD_next30days", "TD_remainingDays"]
-            },
-            "notifications" : {
-                "monitorNotifications" : false,
-                "folderStatusToUse" : ["ERROR", "SI_INTG_ERROR", "DONE", "REFUSED", "ADD_AWAITING"]
-            }
-        },
-        "GTpageSizeLimit" : 1000,
-        "notificationStatusToMonitor" : ["ERROR", "PENDING"],
-        "detailsBatchSize": 1000,
-        "notificationsSize" : 1000,
-        "notificationExportData" : [    "codeDemarche", 
-                                        "idDemarche",
-                                        "creationDate",
-                                        "caseCurrentStatus",
-                                        "caseNewStatus",
-                                        {"key" : "attachments", "alias" : "Nb PJ", "value" : "%.length"},
-                                        {"key" : "status", "alias" : "Notification"},
-                                        {"key" : "uploadDocumentAction", "alias" : "Documents"},
-                                        {"key" : "updateStatusAction", "alias" : "Fil d'activité"},
-                                        {"key" : "emailAction", "alias" : "Email"},
-                                        "nbRetry",
-                                        "lastStatusUpdate",
-                                        "updateStatusError"],
-        "disableComputeForTimeDivision": ["TD_next30days", "TD_remainingDays"],
-        "perimeters": [ { "name": "Démarches Eric", "demarches": ["DICPE", "EICPE", "DAENV", "DIOTA", "FCB", "arnaqueInternet"] },
-                        { "name": "Démarches Vanessa", "demarches": ["MD", "CR", "OperationTranquilliteVacances", "pub-changement-nom", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] }]
-    },
-    "CR" : {
-        "notifications" : {
-            "monitorNotifications" : true,
-            "folderStatusToUse" : ["IN_PROGRESS", "ERROR", "SI_INTG_ERROR", "DONE", "REFUSED"]
-        }
-    },
-    "MD" : {
-        "notifications" : {
-            "monitorNotifications" : true,
-            "folderStatusToUse" : ["IN_PROGRESS", "ERROR", "SI_INTG_ERROR", "DONE", "REFUSED"]
-        }
-    },
-    "DICPE": {
-        "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
-    },
-    "EICPE": {
-        "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
-    },
-    "DAENV": {
-        "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
-    },
-    "DIOTA": {
-        "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
-    },
-    "arnaqueInternet": {
-        "alias": "Arnaque Internet",
-        "notifications" : {
-            "monitorNotifications" : true,
-            "folderStatusToUse" : ["ERROR", "DONE", "REFUSED", "ADD_AWAITING"]
-        }
-    },
-    "FCB": {
-        "notifications" : {
-            "monitorNotifications" : true,
-            "folderStatusToUse" : ["ERROR", "DONE", "REFUSED", "CLOSED"]
-        }
-    }
-}
 
 function displayPerimeter() {
 
@@ -897,6 +819,9 @@ const Progressbar = (function () {
 
     setInterval(function () {
 
+        if (_manager == null)
+            return;
+
         _manager.tick();
 
         var requestDisplay = _manager.isRequestingDisplay();
@@ -929,7 +854,12 @@ const Progressbar = (function () {
 
     function setManager(m)
     {
-        _manager = m;
+        if (typeof m.getProgression === "function" && typeof m.isRequestingDisplay === "function" && typeof m.tick === "function")
+            _manager = m;
+        else
+        {
+            throw new Error('Custom Progress bar cannot set the manager');
+        }
     }
 
     return {
@@ -1050,6 +980,32 @@ function initialize() {
         return;
     initialized = true;
 
+    /* Ajout des feuilles de styles */
+    var head  = document.getElementsByTagName('head')[0];
+    var link  = document.createElement('link');
+    link.rel  = 'stylesheet';
+    link.type = 'text/css';
+    link.href = EXTERNAL_RESSOURCES + "/supervision.css";
+    link.media = 'all';
+    head.appendChild(link);
+
+    /* Ajout de la progressbar */
+    document.body.innerHTML = `<div id='waitingMessage' class='interact'>
+        <span>Patientez svp... les actions sont désactivées pour le moment.</span>
+        <div class="progressbar"><span class="progress"></span><div class="counter">0%</div></div>
+        <span class='title'></span>
+    </div>`;
+
+    /* On map la popin d'attente à la file d'appel Ajax */
+    Progressbar.setManager(CustomProgressbarManager_queuedFetch);
+
+    queuedFetch.addRequest({"url" : EXTERNAL_RESSOURCES + "configuration.json"}, getConfigurationComplete);
+}
+
+function getConfigurationComplete(items)
+{
+    CONFIG = items[0].response;
+
     /*
      * On repasse sur la configuration
      */
@@ -1061,24 +1017,9 @@ function initialize() {
         }
     });
 
-    /* Ajout des feuilles de styles */
-    var head  = document.getElementsByTagName('head')[0];
-    var link  = document.createElement('link');
-    link.rel  = 'stylesheet';
-    link.type = 'text/css';
-    link.href = EXTERNAL_RESSOURCES + "/supervision.css";
-    link.media = 'all';
-    head.appendChild(link);
-
-    /* On map la popin d'attente à la file d'appel Ajax */
-    Progressbar.setManager(CustomProgressbarManager_queuedFetch);
 
     /* Construction du menu */
-    var menuHTML = `<div id='waitingMessage' class='interact'>
-        <span>Patientez svp... les actions sont désactivées pour le moment.</span>
-        <div class="progressbar"><span class="progress"></span><div class="counter">0%</div></div>
-        <span class='title'></span>
-    </div>
+    var menuHTML = `
     <nav class='interact'>
         <menu>
             <menuitem id="perimetreList">
@@ -1094,7 +1035,7 @@ function initialize() {
         </menu>
     </nav>`;
 
-    document.body.innerHTML = menuHTML;
+    document.body.innerHTML += menuHTML;
 }
 
 function loadPerimeter(index)
