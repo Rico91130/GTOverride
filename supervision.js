@@ -70,10 +70,19 @@ const helper = (function () {
         downloadAnchorNode.remove();
     }
 
-    function buildQuery() {
+    function buildQuery(url, params, defaultVal) {
 
+        var replaceURL = url;
+        Object.keys(params).forEach(key => {
+            replaceURL = replaceURL.replaceAll("%%" + key + "%%", params[key])
+        });
+
+        if (defaultVal == null)
+            defaultVal = "";
+
+        return replaceURL.replace(/%%(.*?)%%/ig, defaultVal);
     }
-    
+
     function configCheckNested(obj, keys) {
         for (var i = 0; i < keys.length; i++) {
         if (!obj || !obj.hasOwnProperty(keys[i])) {
@@ -85,6 +94,7 @@ const helper = (function () {
     }
 
     return {
+        buildQuery : buildQuery,
         downloadObjectAsCSV : downloadObjectAsCSV,
         JSDate2GTDate : JSDate2GTDate,
         GTDate2JSDate : GTDate2JSDate,
@@ -271,8 +281,6 @@ function displayPerimeter() {
 
         /* Récupération de la liste des status à superviser */
         var _FOLDER_STATUS = helper.readConfig(demarche, "status", true, ["*"]);
-        console.log(demarche);
-        console.log(_FOLDER_STATUS);
 
         if (_FOLDER_STATUS.length == 1 && _FOLDER_STATUS[0] == "*")
             /* Status à superviser pour la démarche sont tous les statuts  */
@@ -461,12 +469,20 @@ function downloadDetails(d) {
     for(var page = 0; page <= nbPages - 1; page++)
     {
         queries.push({
-            "url" : QUERY_GETFOLDERS.replace("%%DEMARCHE%%", helper.readConfig(demarche, "GTName", false, demarche)).replace("%%STATUS%%", FS).replace("%%STARTDATE%%", TD.start).replace("%%ENDDATE%%", TD.end).replace("%%PAGE%%",page).replace("%%PAGESIZE%%", detailsBatchSizeBatchSize).replace("%%NOTIFICATIONSTATUS%%",""),
+            "url" : helper.buildQuery(QUERY_GETFOLDERS, {
+                "DEMARCHE" : helper.readConfig(demarche, "GTName", false, demarche),
+                "STATUS" : FS,
+                "STARTDATE" : TD.start,
+                "ENDDATE" : TD.end,
+                "PAGE" : page,
+                "PAGESIZE" : detailsBatchSizeBatchSize
+            }),
             "demarche" : demarche,
             "FS" : FS,
             "TDID" : TD
         });
     }
+
     queuedFetch.addRequest(queries, getDetailsComplete);
 }
 
@@ -544,7 +560,12 @@ async function loadMatrixData(d) {
                 document.querySelector("table." + demarche + ".folders td." + FS + "." + TD.id).innerText = "\u231B";
                 document.querySelector("table." + demarche + ".folders td." + FS + "." + TD.id).classList.remove("alert");
                 var query = {
-                    "url" : QUERY_GETFOLDERS.replace("%%DEMARCHE%%", helper.readConfig(demarche, "GTName", false, demarche)).replace("%%STATUS%%", FS).replace("%%STARTDATE%%", TD.start ?? "").replace("%%ENDDATE%%", TD.end ?? "").replace("%%PAGE%%","").replace("%%PAGESIZE%%","").replace("%%NOTIFICATIONSTATUS%%",""),
+                    "url" : helper.buildQuery(QUERY_GETFOLDERS, {
+                        "DEMARCHE" : helper.readConfig(demarche, "GTName", false, demarche),
+                        "STATUS" : FS,
+                        "STARTDATE" : TD.start ?? "",
+                        "ENDDATE" : TD.end ?? ""
+                    }),
                     "demarche" : demarche,
                     "FS" : FS,
                     "TD" : TD
@@ -604,7 +625,14 @@ function loadNotificationsData(d)
     }
 
     var query = {
-        "url" : QUERY_GETFOLDERS.replace("%%DEMARCHE%%", helper.readConfig(demarche, "GTName", false, demarche)).replace("%%STATUS%%", folderStatusToUse.join(",")).replace("%%STARTDATE%%", helper.JSDate2GTDate(YESTERDAY)).replace("%%ENDDATE%%", "").replace("%%PAGE%%", 0).replace("%%PAGESIZE%%", notificationsSize).replace("%%NOTIFICATIONSTATUS%%",notificationStatusToMonitor.join(",")),
+        "url" : helper.buildQuery(QUERY_GETFOLDERS, {
+            "DEMARCHE" : helper.readConfig(demarche, "GTName", false, demarche),
+            "STATUS" : folderStatusToUse.join(","),
+            "STARTDATE" : helper.JSDate2GTDate(YESTERDAY),
+            "PAGE" : 0,
+            "PAGESIZE" : notificationsSize,
+            "NOTIFICATIONSTATUS" : notificationStatusToMonitor.join(",")
+        }),
         "demarche" : demarche
     }
 
@@ -620,7 +648,7 @@ function getFoldersListComplete(items)
     var getSendingsQueries = [];
 
     items[0].response.content.map(x => getSendingsQueries.push({
-        "url" : QUERY_GETSENDINGS.replace("%%FOLDERID%%", x.id),
+        "url" : helper.buildQuery(QUERY_GETSENDINGS, {"FOLDERID" : x.id}),
         "demarche" : items[0].query.demarche
     }));
 
@@ -646,7 +674,7 @@ function getSendingsDataComplete(items)
     var getNotificationsQueries = [];
 
     items.forEach(item => getNotificationsQueries.push({
-        "url" : QUERY_GETNOTIFICATIONS.replace("%%SENDINGID%%", item.response[0].id),
+        "url" : helper.buildQuery(QUERY_GETNOTIFICATIONS, {"SENDINGID" : item.response[0].id}),
         "demarche" : items[0].query.demarche
     }));
 
