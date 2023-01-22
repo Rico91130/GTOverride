@@ -35,7 +35,7 @@
                                         "updateStatusError"],
         "disableComputeForTimeDivision": ["TD_next30days", "TD_remainingDays"],
         "perimeters": [ { "name": "Démarches Eric", "demarches": ["DICPE", "EICPE", "DAENV", "DIOTA", "FCB", "arnaqueInternet"] },
-                        { "name": "Démarches Vanessa", "demarches": ["MD", "CR", "OperationTranquilliteVacances", "pub-changement-nom", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] }]
+                        { "name": "Démarches Vanessa", "demarches": ["MD", "CR", "OperationTranquilliteVacances", "PUBCHGTNOM", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] }]
     },
     "CR" : {
         "status" : ["HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SI_RECEIVED", "IN_PROGRESS", "DONE", "REFUSED", "CLOSED", "PENDING", "SI_INTG_ERROR", "ERROR"],
@@ -89,7 +89,8 @@
             "CLOSED": ["TD_next7days", "TD_next30days", "TD_remainingDays"]
         }
     },
-    "pub-changement-nom" : {
+    "PUBCHGTNOM" : {
+        "GTName" : "pub-changement-nom",
         "status" : ["HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SI_RECEIVED", "DONE", "REFUSED", "CLOSED", "PENDING", "SI_INTG_ERROR", "ERROR"],
         "highlights" : {
             "ERROR": ["*"],
@@ -116,7 +117,7 @@
         "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
     },
     "arnaqueInternet": {
-        "alias": "Arnaque Internet",
+        "displayName": "Arnaque Internet",
         "notifications" : {
             "monitorNotifications" : true,
             "folderStatusToUse" : ["ERROR", "DONE", "REFUSED", "ADD_AWAITING"]
