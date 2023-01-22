@@ -38,7 +38,7 @@
                         { "name": "Démarches Vanessa", "demarches": ["MD", "CR", "OperationTranquilliteVacances", "pub-changement-nom", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] }]
     },
     "CR" : {
-        "highlight" : {
+        "highlights" : {
             "ERROR": ["*"],
             "SI_INTG_ERROR": ["*"],
             "PENDING": ["*"],
@@ -53,7 +53,7 @@
         }
     },
     "MD" : {
-        "highlight" : {
+        "highlights" : {
             "ERROR": ["*"],
             "SI_INTG_ERROR": ["*"],
             "PENDING": ["*"],
