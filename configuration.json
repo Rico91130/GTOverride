@@ -38,6 +38,7 @@
                         { "name": "Démarches Vanessa", "demarches": ["MD", "CR", "OperationTranquilliteVacances", "pub-changement-nom", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] }]
     },
     "CR" : {
+        "status" : ["HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SI_RECEIVED", "IN_PROGRESS", "DONE", "REFUSED", "CLOSED", "PENDING", "SI_INTG_ERROR", "ERROR"],
         "highlights" : {
             "ERROR": ["*"],
             "SI_INTG_ERROR": ["*"],
@@ -53,6 +54,7 @@
         }
     },
     "MD" : {
+        "status" : ["HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SI_RECEIVED", "IN_PROGRESS", "DONE", "REFUSED", "CLOSED", "PENDING", "SI_INTG_ERROR", "ERROR"],
         "highlights" : {
             "ERROR": ["*"],
             "SI_INTG_ERROR": ["*"],
