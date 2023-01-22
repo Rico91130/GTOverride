@@ -49,7 +49,7 @@
             "IN_PROGRESS": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
             "DONE": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
             "REFUSED": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "CLOSED": ["TD_next7days", "TD_next30days", "TD_remainingDays"]
+            "CLOSED": ["TD_next30days", "TD_remainingDays"]
         },
         "notifications" : {
             "monitorNotifications" : true,
@@ -68,7 +68,7 @@
             "IN_PROGRESS": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
             "DONE": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
             "REFUSED": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "CLOSED": ["TD_next7days", "TD_next30days", "TD_remainingDays"]
+            "CLOSED": ["TD_next30days", "TD_remainingDays"]
         },
         "notifications" : {
             "monitorNotifications" : true,
