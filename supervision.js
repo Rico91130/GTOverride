@@ -70,6 +70,10 @@ const helper = (function () {
         downloadAnchorNode.remove();
     }
 
+    function buildQuery() {
+
+    }
+    
     function configCheckNested(obj, keys) {
         for (var i = 0; i < keys.length; i++) {
         if (!obj || !obj.hasOwnProperty(keys[i])) {
@@ -267,6 +271,9 @@ function displayPerimeter() {
 
         /* Récupération de la liste des status à superviser */
         var _FOLDER_STATUS = helper.readConfig(demarche, "status", true, ["*"]);
+        console.log(demarche);
+        console.log(_FOLDER_STATUS);
+
         if (_FOLDER_STATUS.length == 1 && _FOLDER_STATUS[0] == "*")
             /* Status à superviser pour la démarche sont tous les statuts  */
             _FOLDER_STATUS = FOLDER_STATUS;
@@ -278,7 +285,7 @@ function displayPerimeter() {
 
         document.body.innerHTML += `
             <div class='menuBar'>
-                <span class='demarcheName ` + demarche + `'>` + helper.readConfig(demarche, "alias", false, demarche) + `</span>
+                <span class='demarcheName ` + demarche + `'>` + helper.readConfig(demarche, "displayName", false, demarche) + `</span>
             </div>
             <div class='menuBar'>
                 <span class='subTitle'>1 - Status des folders par date de mise à jour</span>
@@ -454,7 +461,7 @@ function downloadDetails(d) {
     for(var page = 0; page <= nbPages - 1; page++)
     {
         queries.push({
-            "url" : QUERY_GETFOLDERS.replace("%%DEMARCHE%%", demarche).replace("%%STATUS%%", FS).replace("%%STARTDATE%%", TD.start).replace("%%ENDDATE%%", TD.end).replace("%%PAGE%%",page).replace("%%PAGESIZE%%", detailsBatchSizeBatchSize).replace("%%NOTIFICATIONSTATUS%%",""),
+            "url" : QUERY_GETFOLDERS.replace("%%DEMARCHE%%", helper.readConfig(demarche, "GTName", false, demarche)).replace("%%STATUS%%", FS).replace("%%STARTDATE%%", TD.start).replace("%%ENDDATE%%", TD.end).replace("%%PAGE%%",page).replace("%%PAGESIZE%%", detailsBatchSizeBatchSize).replace("%%NOTIFICATIONSTATUS%%",""),
             "demarche" : demarche,
             "FS" : FS,
             "TDID" : TD
@@ -537,7 +544,7 @@ async function loadMatrixData(d) {
                 document.querySelector("table." + demarche + ".folders td." + FS + "." + TD.id).innerText = "\u231B";
                 document.querySelector("table." + demarche + ".folders td." + FS + "." + TD.id).classList.remove("alert");
                 var query = {
-                    "url" : QUERY_GETFOLDERS.replace("%%DEMARCHE%%", demarche).replace("%%STATUS%%", FS).replace("%%STARTDATE%%", TD.start ?? "").replace("%%ENDDATE%%", TD.end ?? "").replace("%%PAGE%%","").replace("%%PAGESIZE%%","").replace("%%NOTIFICATIONSTATUS%%",""),
+                    "url" : QUERY_GETFOLDERS.replace("%%DEMARCHE%%", helper.readConfig(demarche, "GTName", false, demarche)).replace("%%STATUS%%", FS).replace("%%STARTDATE%%", TD.start ?? "").replace("%%ENDDATE%%", TD.end ?? "").replace("%%PAGE%%","").replace("%%PAGESIZE%%","").replace("%%NOTIFICATIONSTATUS%%",""),
                     "demarche" : demarche,
                     "FS" : FS,
                     "TD" : TD
@@ -597,7 +604,7 @@ function loadNotificationsData(d)
     }
 
     var query = {
-        "url" : QUERY_GETFOLDERS.replace("%%DEMARCHE%%", demarche).replace("%%STATUS%%", folderStatusToUse.join(",")).replace("%%STARTDATE%%", helper.JSDate2GTDate(YESTERDAY)).replace("%%ENDDATE%%", "").replace("%%PAGE%%", 0).replace("%%PAGESIZE%%", notificationsSize).replace("%%NOTIFICATIONSTATUS%%",notificationStatusToMonitor.join(",")),
+        "url" : QUERY_GETFOLDERS.replace("%%DEMARCHE%%", helper.readConfig(demarche, "GTName", false, demarche)).replace("%%STATUS%%", folderStatusToUse.join(",")).replace("%%STARTDATE%%", helper.JSDate2GTDate(YESTERDAY)).replace("%%ENDDATE%%", "").replace("%%PAGE%%", 0).replace("%%PAGESIZE%%", notificationsSize).replace("%%NOTIFICATIONSTATUS%%",notificationStatusToMonitor.join(",")),
         "demarche" : demarche
     }
 
