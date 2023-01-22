@@ -4,6 +4,85 @@ const EXTERNAL_RESSOURCES = "https://rico91130.github.io/GTOverride/";
 const FOLDER_STATUS = ["OK", "SENT", "PENDING", "HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SI_RECEIVED", "IN_PROGRESS", "ADD_AWAITING", "REFUSED", "DONE", "CLOSED", "ARCHIVED", "CANCELLED", "SI_INTG_ERROR", "ERROR"];
 const FOLDER_TIME_DIVISIONS = [];
 
+const helper = (function () {
+
+    /* Convertit une string date au format GT en date JS */
+    function GTDate2JSDate(GTDate) {
+        var [dateValues, timeValues] = GTDate.split(' ');
+        var [day, month, year] = dateValues.split('-');
+        var [hours, minutes, seconds] = timeValues.split(':');
+        return new Date(+year, +month - 1, +day, +hours, +minutes, +seconds);
+    }
+
+    /* Convertit une date JS en date GT */
+    function JSDate2GTDate(JSDate) {
+        return JSDate.getFullYear() + "-" +  (""+(JSDate.getMonth()+1)).padStart(2,"0") + "-" + (""+JSDate.getDate()).padStart(2,"0")
+    }
+    
+    /* Lire la configuration */
+    function readConfig(context, _key, useGlobal, useDefault)
+    {
+        if (useGlobal == null)
+            useGlobal = true;
+
+        var keys = _key.split(".");
+        
+        var value = null;
+        var read = false;
+        
+        if (configCheckNested(CONFIG, [context].concat(keys))) {
+            value = eval("CONFIG." +  [context].concat(keys).join("."));
+            read = true;
+        } 
+    
+        if (!read)
+        {
+            /*
+            * Dans le cas d'un contexte "GLOBAL", on ne doit pas passer par ce code,
+            * car l'utilisation du modèle par défaut ne concerne que le contexte des démarches
+            */
+            if (context != "GLOBAL" && useGlobal && configCheckNested(CONFIG, ["GLOBAL", "DEFAULT_MODEL"].concat(keys)))
+            {
+                value = eval("CONFIG." +  ["GLOBAL", "DEFAULT_MODEL"].concat(keys).join("."));
+            }
+            else
+            {
+                value = useDefault;
+            }  
+        }
+
+        return value;
+    }
+
+    function downloadObjectAsCSV(exportObj, exportName) {
+        var dataStr = "data:text/csv;charset=utf-8,\ufeff" + encodeURIComponent(exportObj);
+        var downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", exportName);
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
+
+    function configCheckNested(obj, keys) {
+        for (var i = 0; i < keys.length; i++) {
+        if (!obj || !obj.hasOwnProperty(keys[i])) {
+            return false;
+        }
+        obj = obj[keys[i]];
+        }
+        return true;
+    }
+
+    return {
+        downloadObjectAsCSV : downloadObjectAsCSV,
+        JSDate2GTDate : JSDate2GTDate,
+        GTDate2JSDate : GTDate2JSDate,
+        readConfig : readConfig
+    }
+    
+})()
+
 const today = createNextFTD(new Date(), "TD_today", "Aujourd'hui", 0);
 const yesterday = createNextFTD(today, "TD_yesterday", "Hier", -1);
 const beforeYesterday = createNextFTD(yesterday, "TD_beforeYesterday", "Avant hier", -1);
@@ -29,7 +108,7 @@ function createNextFTD(origin, id, label, days) {
     /* Cas normal (hors date du jour) */
     if (days != 0) 
     {
-        newTD.end =  origin.dStart.toISOString().split("T")[0];
+        newTD.end =  helper.JSDate2GTDate(origin.dStart);
         newTD.dEnd = origin.dStart;
     }
     
@@ -42,7 +121,7 @@ function createNextFTD(origin, id, label, days) {
         else   
             dNewTD.setTime(origin.dStart.getTime() + days * 24 * 60 * 60 * 1000);
         
-        newTD.start = dNewTD.toISOString().split("T")[0];
+        newTD.start = helper.JSDate2GTDate(dNewTD);
         newTD.dStart = dNewTD;
     }
 
@@ -52,7 +131,7 @@ function createNextFTD(origin, id, label, days) {
     if (newTD.end != null && !newTD.singleDay) {
         const dNewTDShow = new Date();
         dNewTDShow.setTime(newTD.dEnd.getTime() - 24 * 60 * 60 * 1000)
-        newTD.showEnd = dNewTDShow.toISOString().split("T")[0].split("-")[2] + "/" + dNewTDShow.toISOString().split("T")[0].split("-")[1];
+        newTD.showEnd = helper.JSDate2GTDate(dNewTDShow).split("-")[2] + "/" + helper.JSDate2GTDate(dNewTDShow).split("-")[1];
     }
 
     return newTD;
@@ -107,7 +186,60 @@ NOTIFICATIONS_TIME_DIVISIONS.push({
 });
 NOTIFICATIONS_TIME_DIVISIONS.reverse();
 
-const NOTIFICATIONS_DATAS = {};
+const NOTIFICATIONS_DATAS = {
+
+    "exists" : function(demarche, statut, time) {
+
+        if (demarche != null && statut != null && time != null)
+        return NOTIFICATIONS_DATAS.hasOwnProperty(demarche) &&
+               NOTIFICATIONS_DATAS[demarche].hasOwnProperty(statut) &&
+               NOTIFICATIONS_DATAS[demarche][statut].hasOwnProperty(time);
+
+        if (demarche != null && statut != null)
+            return NOTIFICATIONS_DATAS.hasOwnProperty(demarche) &&
+                   NOTIFICATIONS_DATAS[demarche].hasOwnProperty(statut) &&
+                   Object.keys(NOTIFICATIONS_DATAS[demarche][statut]).length > 0;
+
+        if (demarche != null)
+            return NOTIFICATIONS_DATAS.hasOwnProperty(demarche);
+    },
+
+    "getOrCreate" : function(demarche, statut, time) {
+
+        if (!this.exists(demarche))
+            this[demarche] = {};
+        
+        if (statut != null && !this.exists(demarche, statut))
+            this[demarche][statut] = {};
+
+        if (statut != null && time != "null" && !this.exists(demarche, statut, time))
+            this[demarche][statut][time] = [];
+
+        if (time != null)
+            return this[demarche][statut][time];
+        
+        if (statut != null)
+            return this[demarche][statut];
+
+        if (demarche != null)
+            return this[demarche];
+    },
+
+    "concat" : function(demarche, statut) {
+        if (!this.exists(demarche, statut))
+            return [];
+
+        var notifications = [];
+        Object.keys(this[demarche]).filter(_statut => statut == _statut || statut == null).forEach(NS => {
+            Object.keys(this[demarche][NS]).forEach(TD => {
+                notifications = notifications.concat(this[demarche][NS][TD]);
+            });
+        });
+        
+        return notifications.sort((a,b) => { return helper.GTDate2JSDate(b.creationDate) - helper.GTDate2JSDate(a.creationDate)});
+
+    }
+};
 
 const QUERY_GETFOLDERS = ENVIRONMENT + "/gtconsole/folders?id=&startDate=&endDate=&startTime=&endTime=&code=%%DEMARCHE%%&status=%%STATUS%%&siret=&guichet=&caseStatus=&notificationStatus=%%NOTIFICATIONSTATUS%%&lastUpdateStartDate=%%STARTDATE%%&lastUpdateEndDate=%%ENDDATE%%&page=%%PAGE%%&pageSize=%%PAGESIZE%%";
 const QUERY_GETSENDINGS = ENVIRONMENT + "/gtconsole/folders/%%FOLDERID%%/sendings";
@@ -135,6 +267,19 @@ const CONFIG = {
         "notificationStatusToMonitor" : ["ERROR", "PENDING"],
         "detailsBatchSize": 1000,
         "notificationsSize" : 1000,
+        "notificationExportData" : [    "codeDemarche", 
+                                        "idDemarche",
+                                        "creationDate",
+                                        "caseCurrentStatus",
+                                        "caseNewStatus",
+                                        {"key" : "attachments", "alias" : "Nb PJ", "value" : "%.length"},
+                                        {"key" : "status", "alias" : "Notification"},
+                                        {"key" : "uploadDocumentAction", "alias" : "Documents"},
+                                        {"key" : "updateStatusAction", "alias" : "Fil d'activité"},
+                                        {"key" : "emailAction", "alias" : "Email"},
+                                        "nbRetry",
+                                        "lastStatusUpdate",
+                                        "updateStatusError"],
         "disableComputeForTimeDivision": ["TD_next30days", "TD_remainingDays"],
         "perimeters": [ { "name": "Démarches Eric", "demarches": ["DICPE", "EICPE", "DAENV", "DIOTA", "FCB", "arnaqueInternet"] },
                         { "name": "Démarches Vanessa", "demarches": ["MD", "CR", "OperationTranquilliteVacances", "pub-changement-nom", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] }]
@@ -178,50 +323,6 @@ const CONFIG = {
     }
 }
 
-function readConfig(context, _key, useGlobal, useDefault)
-{
-    if (useGlobal == null)
-        useGlobal = true;
-
-    var keys = _key.split(".");
-    
-    var value = null;
-    var read = false;
-    
-    if (configCheckNested(CONFIG, [context].concat(keys))) {
-        value = eval("CONFIG." +  [context].concat(keys).join("."));
-        read = true;
-    } 
- 
-    if (!read)
-    {
-        /*
-         * Dans le cas d'un contexte "GLOBAL", on ne doit pas passé par ce code,
-         * car l'utilisation du modèle par défaut ne concerne que le contexte des démarches
-         */
-        if (context != "GLOBAL" && useGlobal && configCheckNested(CONFIG, ["GLOBAL", "DEFAULT_MODEL"].concat(keys)))
-        {
-            value = eval("CONFIG." +  ["GLOBAL", "DEFAULT_MODEL"].concat(keys).join("."));
-        }
-        else
-        {
-            value = useDefault;
-        }  
-    }
-
-    return value;
-}
-
-function configCheckNested(obj, keys) {
-    for (var i = 0; i < keys.length; i++) {
-      if (!obj || !obj.hasOwnProperty(keys[i])) {
-        return false;
-      }
-      obj = obj[keys[i]];
-    }
-    return true;
-}
-
 function displayPerimeter() {
 
     for (const demarche of arguments) {
@@ -231,7 +332,7 @@ function displayPerimeter() {
          */
 
         /* Récupération de la liste des status à superviser */
-        var _FOLDER_STATUS = readConfig(demarche, "status", true, ["*"]);
+        var _FOLDER_STATUS = helper.readConfig(demarche, "status", true, ["*"]);
         if (_FOLDER_STATUS.length == 1 && _FOLDER_STATUS[0] == "*")
             /* Status à superviser pour la démarche sont tous les statuts  */
             _FOLDER_STATUS = FOLDER_STATUS;
@@ -243,7 +344,7 @@ function displayPerimeter() {
 
         document.body.innerHTML += `
             <div class='menuBar'>
-                <span class='demarcheName ` + demarche + `'>` + readConfig(demarche, "alias", false, demarche) + `</span>
+                <span class='demarcheName ` + demarche + `'>` + helper.readConfig(demarche, "alias", false, demarche) + `</span>
             </div>
             <div class='menuBar'>
                 <span class='subTitle'>1 - Status des folders par date de mise à jour</span>
@@ -280,7 +381,7 @@ function displayPerimeter() {
 
             _FOLDER_STATUS.forEach(s => {
 
-                var h = readConfig(demarche, "highlights." + s);
+                var h = helper.readConfig(demarche, "highlights." + s);
 
                 var highlight = false;
                 if (h != null && h.length > 0)
@@ -302,11 +403,11 @@ function displayPerimeter() {
         /*
          * Construction du tableau des notifications
          */
-        var monitorNotifications = readConfig(demarche, "notifications.monitorNotifications", true, false);
+        var monitorNotifications = helper.readConfig(demarche, "notifications.monitorNotifications", true, false);
         if (!monitorNotifications)
             continue;
 
-        var folderStatusToUse = readConfig(demarche, "notifications.folderStatusToUse", true, ["*"]);
+        var folderStatusToUse = helper.readConfig(demarche, "notifications.folderStatusToUse", true, ["*"]);
         if (folderStatusToUse.length == 1 && folderStatusToUse[0] == "*")
             folderStatusToUse = FOLDER_STATUS;
         else
@@ -333,7 +434,7 @@ function displayPerimeter() {
             html += "<tbody>";
             NOTIFICATIONS_STATUS.filter(NS => CONFIG.GLOBAL.notificationStatusToMonitor.includes(NS)).forEach(NS => {
     
-                html += "<tr class='header'><td>" + NS + "</td>";
+                html += "<tr class='header'><td data-demarche='" + demarche + "' data-status='" + NS + "' onclick='downloadNotificationsDetails(this)' class='interact'>" + NS + "</td>";
     
                 NOTIFICATIONS_TIME_DIVISIONS.forEach(TD => {
                     html += "<td class='" + TD.id + " " + NS + (NS=="ERROR" ? " highlight" : "") + "'>?</td>";
@@ -350,6 +451,49 @@ function displayPerimeter() {
             document.body.appendChild(container);
 
     }
+}
+
+function downloadNotificationsDetails(d)
+{
+    if (d.classList.contains("disable"))
+    return;
+
+    var demarche = d.getAttribute("data-demarche");
+    var NS = d.getAttribute("data-status");
+
+    /* On vérifie qu'il y a bien des données de notification pour la démarche en question */
+    if (!NOTIFICATIONS_DATAS.exists(demarche, NS))
+        return;
+    
+    var notificationsList = NOTIFICATIONS_DATAS.concat(demarche, NS);
+
+    var notificationsCSV = [];
+    var notificationsCSVLine = [];
+
+    /*
+     * On parse les notifications pour récupérer les colonnes à exporter
+     * Avant : on génère les header
+     * Pendant : recherche des colonnes et éventuel post processing
+     */
+    CONFIG.GLOBAL.notificationExportData.forEach(header => {
+        notificationsCSVLine.push(header.alias ?? header.key);
+    });
+    notificationsCSV.push(notificationsCSVLine.join(";"));
+
+    notificationsList.forEach(notification => {
+        notificationsCSVLine = [];
+        CONFIG.GLOBAL.notificationExportData.forEach(header => {
+            var data = notification.hasOwnProperty(header.key) ? notification[header.key] : "";
+            if (header.hasOwnProperty("value")) {
+                data = eval(header.value.replace("%", "data"));
+            }
+            data = (""+data).replaceAll(";", ",").replaceAll("\r", "").replaceAll("\n", "");
+            notificationsCSVLine.push(data);
+        });
+        notificationsCSV.push(notificationsCSVLine.join(";"));
+    });
+
+    helper.downloadObjectAsCSV(notificationsCSV.join("\r\n"), "notifications");
 }
 
 function downloadDetails(d) {
@@ -386,7 +530,7 @@ function downloadDetails(d) {
 }
 
 function getDetailsComplete(queries) {
-    console.log(queries);
+
     var folders = [];
     queries.forEach(q => folders = folders.concat(q.response.content));
 
@@ -399,7 +543,7 @@ function getDetailsComplete(queries) {
     dateGeneration = new Date();
     dateGenerationFormat = dateGeneration.getFullYear() + (dateGeneration.getMonth() + "").padStart(2, "0") + (dateGeneration.getDate() + "").padStart(2, "0");
 
-    downloadObjectAsCSV(foldersCSV.join("\r\n"), dateGenerationFormat + "_extractFolders.csv");
+    helper.downloadObjectAsCSV(foldersCSV.join("\r\n"), dateGenerationFormat + "_extractFolders.csv");
 }
 
 function downloadMatrix(d) {
@@ -430,7 +574,7 @@ function downloadMatrix(d) {
     var dateGeneration = new Date();
     dateGenerationFormat = dateGeneration.getFullYear() + ((dateGeneration.getMonth()+1) + "").padStart(2, "0") + (dateGeneration.getDate() + "").padStart(2, "0");
 
-    downloadObjectAsCSV(csvData, "demarche_" + demarche + "_" + dateGenerationFormat + ".csv");
+    helper.downloadObjectAsCSV(csvData, "demarche_" + demarche + "_" + dateGenerationFormat + ".csv");
 }
 
 async function loadMatrixData(d) {
@@ -442,7 +586,7 @@ async function loadMatrixData(d) {
     var reloadType = d.getAttribute("data-reload");
 
     /* Récupération de la liste des status à superviser */
-    var _FOLDER_STATUS = readConfig(demarche, "status", true, ["*"]);
+    var _FOLDER_STATUS = helper.readConfig(demarche, "status", true, ["*"]);
     if (_FOLDER_STATUS.length == 1 && _FOLDER_STATUS[0] == "*")
         /* Status à superviser pour la démarche sont tous les statuts  */
         _FOLDER_STATUS = FOLDER_STATUS;
@@ -478,7 +622,7 @@ function getMatrixDataComplete(queries)
     /* highlight */
     if (item.response.totalElements > 0) 
     {
-        var h = readConfig(item.query.demarche, "highlights." + item.query.FS);
+        var h = helper.readConfig(item.query.demarche, "highlights." + item.query.FS);
         if (h != null && h.length > 0)
         {
             if (h[0] == "*" || h.includes(item.query.TD.id))
@@ -510,7 +654,7 @@ function loadNotificationsData(d)
     var notificationStatusToMonitor = NOTIFICATIONS_STATUS.filter(NS => CONFIG.GLOBAL.notificationStatusToMonitor.includes(NS));
     var folderStatusForNotificationsMonitoring;
 
-    var folderStatusToUse = readConfig(demarche, "notifications.folderStatusToUse", true, ["*"]);
+    var folderStatusToUse = helper.readConfig(demarche, "notifications.folderStatusToUse", true, ["*"]);
     if (folderStatusToUse.length == 1 && folderStatusToUse[0] == "*")
         folderStatusToUse = FOLDER_STATUS;
     else
@@ -519,7 +663,7 @@ function loadNotificationsData(d)
     }
 
     var query = {
-        "url" : QUERY_GETFOLDERS.replace("%%DEMARCHE%%", demarche).replace("%%STATUS%%", folderStatusToUse.join(",")).replace("%%STARTDATE%%", YESTERDAY.toISOString().split("T")[0]).replace("%%ENDDATE%%", "").replace("%%PAGE%%", 0).replace("%%PAGESIZE%%", notificationsSize).replace("%%NOTIFICATIONSTATUS%%",notificationStatusToMonitor.join(",")),
+        "url" : QUERY_GETFOLDERS.replace("%%DEMARCHE%%", demarche).replace("%%STATUS%%", folderStatusToUse.join(",")).replace("%%STARTDATE%%", helper.JSDate2GTDate(YESTERDAY)).replace("%%ENDDATE%%", "").replace("%%PAGE%%", 0).replace("%%PAGESIZE%%", notificationsSize).replace("%%NOTIFICATIONSTATUS%%",notificationStatusToMonitor.join(",")),
         "demarche" : demarche
     }
 
@@ -570,15 +714,13 @@ function getSendingsDataComplete(items)
     queuedFetch.addRequest(getNotificationsQueries, getNotificationsDataComplete, getNotificationsDataPartial);
 }
 
-
-
 function getNotificationsDataPartial(item)
 {
+
     item.response.forEach(notification => {
 
         if (CONFIG.GLOBAL.notificationStatusToMonitor.includes(notification.status))
         { 
- 
             var dateCreationNotification = helper.GTDate2JSDate(notification.creationDate);
 
             /* On ne prend que les notifications dont la date de création est dans le périmètre du tableau */
@@ -588,16 +730,12 @@ function getNotificationsDataPartial(item)
 
                 TD = TD[0];
 
-                if (!NOTIFICATIONS_DATAS[item.query.demarche].hasOwnProperty(notification.status))
-                    NOTIFICATIONS_DATAS[item.query.demarche][notification.status] = {};
-                if (!NOTIFICATIONS_DATAS[item.query.demarche][notification.status].hasOwnProperty(TD.id))
-                    NOTIFICATIONS_DATAS[item.query.demarche][notification.status][TD.id] = [];
-
-                NOTIFICATIONS_DATAS[item.query.demarche][notification.status][TD.id].push(notification);
                 var htmlo = document.querySelector("table."+ item.query.demarche + ".notifications td." + notification.status + "." + TD.id);
-
+                
                 if (htmlo != null)
                 {
+                    NOTIFICATIONS_DATAS.getOrCreate(item.query.demarche, notification.status, TD.id).push(notification);
+
                     var num = 0;
                     if (!isNaN(htmlo.innerText) && htmlo.innerText != "")
                         num = parseInt(htmlo.innerText);
@@ -605,7 +743,10 @@ function getNotificationsDataPartial(item)
                     htmlo.innerText = ++num;
 
                     if (num > 0 && htmlo.classList.contains("highlight"))
+                    {
                         htmlo.classList.add("alert");
+                    }
+                    
                 }
             }
         }
@@ -616,22 +757,21 @@ function getNotificationsDataPartial(item)
 }
 
 function getNotificationsDataComplete(items) {
+
+    var demarche = items[0].query.demarche;
+    
+    document.querySelectorAll("table."+ demarche + ".notifications tbody tr td:first-child").forEach(TD => {
+        var status = TD.getAttribute("data-status");
+
+        if (NOTIFICATIONS_DATAS.exists(demarche, status))
+            TD.classList.add("copyIcon");
+        else
+            TD.classList.remove("copyIcon");
+    });
+
     CustomProgressbarManager_onDemand.hide();
     Progressbar.setManager(CustomProgressbarManager_queuedFetch);
 }
-
-const helper = (function () {
-    function GTDate2JSDate(GTDate) {
-        var [dateValues, timeValues] = GTDate.split(' ');
-        var [day, month, year] = dateValues.split('-');
-        var [hours, minutes, seconds] = timeValues.split(':');
-        return new Date(+year, +month - 1, +day, +hours, +minutes, +seconds);
-    }
-    return {
-        GTDate2JSDate: GTDate2JSDate
-    }
-    
-})()
 
 var queuedFetch = (function () {
 
@@ -730,16 +870,6 @@ var queuedFetch = (function () {
     }
     
 })()
-
-function downloadObjectAsCSV(exportObj, exportName) {
-    var dataStr = "data:text/csv;charset=utf-8,\ufeff" + encodeURIComponent(exportObj);
-    var downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", exportName);
-    document.body.appendChild(downloadAnchorNode); // required for firefox
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-}
 
 const Progressbar = (function () {
 
@@ -896,8 +1026,26 @@ const CustomProgressbarManager_queuedFetch = (function () {
 
 })();
 
+var initialized = false;
 function initialize() {
 
+    /* On initialise qu'une fois */
+    if (initialized)
+        return;
+    initialized = true;
+
+    /*
+     * On repasse sur la configuration
+     */
+    
+    /* Notification : uniformisation des types pour l'export */
+    CONFIG.GLOBAL.notificationExportData.forEach((column, index) => {
+        if (typeof column === 'string' || column instanceof String) {
+            CONFIG.GLOBAL.notificationExportData[index] = {"key" : column};
+        }
+    });
+
+    /* Ajout des feuilles de styles */
     var head  = document.getElementsByTagName('head')[0];
     var link  = document.createElement('link');
     link.rel  = 'stylesheet';
@@ -906,6 +1054,7 @@ function initialize() {
     link.media = 'all';
     head.appendChild(link);
 
+    /* On map la popin d'attente à la file d'appel Ajax */
     Progressbar.setManager(CustomProgressbarManager_queuedFetch);
 
     /* Construction du menu */
@@ -941,5 +1090,5 @@ function loadPerimeter(index)
     
 }
 
+/* Si exécuté en direct (autrement initialize() est appelé par le bookmark) */
 initialize();
-//buildMatrix("DICPE", "DAENV", "arnaqueInternet");
