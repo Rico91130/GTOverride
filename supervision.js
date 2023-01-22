@@ -168,7 +168,13 @@ for(var plage = 0; plage < 10; plage++)
     NOTIFICATIONS_TIME_DIVISIONS.push({
         "startH" : debutPlage,
         "endH" : finPlage,
-        "label" : (debutPlage.getHours()+"").padStart(2,"0") + "h" + (debutPlage.getMinutes()+"").padStart(2,"0") + "-" + (finPlage.getHours()+"").padStart(2,"0") + "h" + (finPlage.getMinutes()+"").padStart(2,"0"),
+        "label" :   debutPlage.getDate().toString().padStart(2,"0") + "/" + 
+                    (debutPlage.getMonth()+1).toString().padStart(2,"0") + " " + 
+                    debutPlage.getHours().toString().padStart(2,"0") + "h" + 
+                    debutPlage.getMinutes().toString().padStart(2,"0") + " - " +
+                    (finPlage.getDate() != debutPlage.getDate() ? (finPlage.getDate().toString().padStart(2,"0") + "/" + (finPlage.getMonth()+1).toString().padStart(2,"0") + " ") : "") +
+                    finPlage.getHours().toString().padStart(2,"0") + "h" +
+                    finPlage.getMinutes().toString().padStart(2,"0"),
         "id" : "NS_" + debutPlage.getHours() + "_" + finPlage.getHours()
     })
 
@@ -176,12 +182,18 @@ for(var plage = 0; plage < 10; plage++)
 }
 
 /* Cas particulier de la TIME DIVISION fourre tout */
-var _date = new Date();
-_date.setTime(debutPlage.getTime() - 1);
+finPlage.setTime(debutPlage.getTime() - 1);
+debutPlage = YESTERDAY
 NOTIFICATIONS_TIME_DIVISIONS.push({
     "startH" : YESTERDAY,
-    "endH" : _date,
-    "label" : "avant",
+    "endH" : finPlage,
+    "label" :   debutPlage.getDate().toString().padStart(2,"0") + "/" + 
+                (debutPlage.getMonth()+1).toString().padStart(2,"0") + " " + 
+                debutPlage.getHours().toString().padStart(2,"0") + "h" + 
+                debutPlage.getMinutes().toString().padStart(2,"0") + " - " +
+                (finPlage.getDate() != debutPlage.getDate() ? (finPlage.getDate().toString().padStart(2,"0") + "/" + (finPlage.getMonth()+1).toString().padStart(2,"0") + " ") : "") +
+                finPlage.getHours().toString().padStart(2,"0") + "h" +
+                finPlage.getMinutes().toString().padStart(2,"0"),
     "id" : "NS_Before"
 });
 NOTIFICATIONS_TIME_DIVISIONS.reverse();
@@ -318,7 +330,7 @@ const CONFIG = {
     "FCB": {
         "notifications" : {
             "monitorNotifications" : true,
-            "folderStatusToUse" : ["ERROR", "DONE", "REFUSED"]
+            "folderStatusToUse" : ["ERROR", "DONE", "REFUSED", "CLOSED"]
         }
     }
 }
@@ -512,7 +524,7 @@ function downloadDetails(d) {
         return;
     
     var nbErrors = parseInt(d.innerText);
-    GTpageSizeLimit
+
     var detailsBatchSizeBatchSize = Math.min(CONFIG.GLOBAL.GTpageSizeLimit, CONFIG.GLOBAL.detailsBatchSize);
     var nbPages = Math.ceil(nbErrors/detailsBatchSizeBatchSize);
 
@@ -758,16 +770,20 @@ function getNotificationsDataPartial(item)
 
 function getNotificationsDataComplete(items) {
 
-    var demarche = items[0].query.demarche;
+    /* On effectue un contrôle sur items car si il n'y a pas de folders alors on appel cette fonction sans items */
+    if (Array.isArray(items))
+    {
+        var demarche = items[0].query.demarche;
     
-    document.querySelectorAll("table."+ demarche + ".notifications tbody tr td:first-child").forEach(TD => {
-        var status = TD.getAttribute("data-status");
-
-        if (NOTIFICATIONS_DATAS.exists(demarche, status))
-            TD.classList.add("copyIcon");
-        else
-            TD.classList.remove("copyIcon");
-    });
+        document.querySelectorAll("table."+ demarche + ".notifications tbody tr td:first-child").forEach(TD => {
+            var status = TD.getAttribute("data-status");
+    
+            if (NOTIFICATIONS_DATAS.exists(demarche, status))
+                TD.classList.add("copyIcon");
+            else
+                TD.classList.remove("copyIcon");
+        });
+    }
 
     CustomProgressbarManager_onDemand.hide();
     Progressbar.setManager(CustomProgressbarManager_queuedFetch);
