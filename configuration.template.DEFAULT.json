@@ -1,6 +1,6 @@
 {
     "DEFAULT": {
-        "templateName" : "DEFAULT MODEL",
+        "templateName" : "DEFAULT TEMPLATE",
         "status": ["HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SENT", "SI_RECEIVED", "IN_PROGRESS", "DONE", "REFUSED", "CLOSED", "PENDING", "SI_INTG_ERROR", "ERROR"],
         "highlights": {
             "ERROR": ["*"],
