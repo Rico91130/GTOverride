@@ -368,9 +368,9 @@ function displayPerimeter() {
             <div class='menuBar'>
                 <span class='subTitle'>2 - Notifications en anomalie, créees entre hier et aujourd'hui</span>
                 <span onclick='loadNotificationsData(this)' data-demarche='` + demarche + `' class='reloadIcon button interact'></span><br/>
-                <span class='subTitle small'>⚠️ Statuts dossiers pris en compte : ` + folderStatusToUse.join(", ") + `</span>
+                <span class='subTitle small'>⚠️ Notifications en anomalie liées au changement de statut du dossier : ` + folderStatusToUse.join(", ") + `</span>
                 <span class='subTitle small'>⚠️ Pour les dossiers mis à jour : entre hier et aujourd'hui</span>
-                <span class='subTitle small'>⚠️ Limité aux notifications des ` + CONFIG.GLOBAL.notificationsSize + ` premiers dossiers retournés au maximum</span>
+                <span class='subTitle small'>⚠️ Limité aux notifications des ` + CONFIG.GLOBAL.notificationsSize + ` derniers dossiers correspondants</span>
             </div>`;
 
         html = `<table class='fl-table demarche ` + demarche + ` notifications'>
@@ -473,7 +473,7 @@ function downloadDetails(d) {
                 "DEMARCHE" : helper.readConfig(demarche, "GTName", false, demarche),
                 "STATUS" : FS,
                 "STARTDATE" : TD.start,
-                "ENDDATE" : TD.end,
+                "ENDDATE" : TD.end ?? "", /* quand il n'y a pas de date de fin pour la TD "aujourd'hui" */
                 "PAGE" : page,
                 "PAGESIZE" : detailsBatchSizeBatchSize
             }),
@@ -616,18 +616,9 @@ function loadNotificationsData(d)
     var notificationStatusToMonitor = NOTIFICATIONS_STATUS.filter(NS => CONFIG.GLOBAL.notificationStatusToMonitor.includes(NS));
     var folderStatusForNotificationsMonitoring;
 
-    var folderStatusToUse = helper.readConfig(demarche, "notifications.folderStatusToUse", true, ["*"]);
-    if (folderStatusToUse.length == 1 && folderStatusToUse[0] == "*")
-        folderStatusToUse = FOLDER_STATUS;
-    else
-    {
-        folderStatusToUse = folderStatusToUse.filter( function( el ) { return FOLDER_STATUS.includes(el) });
-    }
-
     var query = {
         "url" : helper.buildQuery(QUERY_GETFOLDERS, {
             "DEMARCHE" : helper.readConfig(demarche, "GTName", false, demarche),
-            "STATUS" : folderStatusToUse.join(","),
             "STARTDATE" : helper.JSDate2GTDate(YESTERDAY),
             "PAGE" : 0,
             "PAGESIZE" : notificationsSize,
@@ -686,9 +677,23 @@ function getSendingsDataComplete(items)
 function getNotificationsDataPartial(item)
 {
 
+    var folderStatusToUse = helper.readConfig(item.query.demarche, "notifications.folderStatusToUse", true, ["*"]);
+    if (folderStatusToUse.length == 1 && folderStatusToUse[0] == "*")
+        folderStatusToUse = FOLDER_STATUS;
+    else
+    {
+        folderStatusToUse = folderStatusToUse.filter( function( el ) { return FOLDER_STATUS.includes(el) });
+    }
+
     item.response.forEach(notification => {
 
-        if (CONFIG.GLOBAL.notificationStatusToMonitor.includes(notification.status))
+        /*
+         * Puisque toutes les status de notification sont remontés pour le sending : 
+         * 1) on retire les status de notifications non monitoré
+         * 2) on retire aussi les status de folder non monitoré
+         */
+        if (CONFIG.GLOBAL.notificationStatusToMonitor.includes(notification.status) &&
+            folderStatusToUse.includes(notification.caseNewStatus))
         { 
             var dateCreationNotification = helper.GTDate2JSDate(notification.creationDate);
 
