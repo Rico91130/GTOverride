@@ -90,6 +90,7 @@
         }
     },
     "recensementCitoyen" : {
+        "defaultTemplate" : "AEC_DDPACS_RCO_DHTOUR",
         "notifications" : {
             "monitorNotifications" : true,
             "folderStatusToUse" : ["DONE", "REFUSED"]
