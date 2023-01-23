@@ -97,16 +97,16 @@
         }
     },
     "DICPE": {
-        "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
+        "defaultTemplate" : "GUN"
     },
     "EICPE": {
-        "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
+        "defaultTemplate" : "GUN"
     },
     "DAENV": {
-        "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
+        "defaultTemplate" : "GUN"
     },
     "DIOTA": {
-        "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
+        "defaultTemplate" : "GUN"
     },
     "arnaqueInternet": {
         "displayName": "Arnaque Internet",
