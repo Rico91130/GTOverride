@@ -55,7 +55,7 @@
         },
         "notifications" : {
             "monitorNotifications" : true,
-            "folderStatusToUse" : ["IN_PROGRESS", "ERROR", "SI_INTG_ERROR", "DONE", "REFUSED"]
+            "folderStatusToUse" : ["DONE", "REFUSED"]
         }
     },
     "MD" : {
@@ -73,7 +73,7 @@
         },
         "notifications" : {
             "monitorNotifications" : true,
-            "folderStatusToUse" : ["IN_PROGRESS", "ERROR", "SI_INTG_ERROR", "DONE", "REFUSED"]
+            "folderStatusToUse" : ["DONE", "REFUSED"]
         }
     },
     "OperationTranquilliteVacances" : {
@@ -104,13 +104,13 @@
         },
         "notifications" : {
             "monitorNotifications" : true,
-            "folderStatusToUse" : ["ERROR", "SI_INTG_ERROR", "DONE"]
+            "folderStatusToUse" : ["DONE"]
         }
     },
     "recensementCitoyen" : {
         "notifications" : {
             "monitorNotifications" : true,
-            "folderStatusToUse" : ["ERROR", "SI_INTG_ERROR", "DONE", "REFUSED"]
+            "folderStatusToUse" : ["DONE", "REFUSED"]
         }
     },
     "DICPE": {
@@ -129,13 +129,13 @@
         "displayName": "Arnaque Internet",
         "notifications" : {
             "monitorNotifications" : true,
-            "folderStatusToUse" : ["ERROR", "DONE", "REFUSED", "ADD_AWAITING"]
+            "folderStatusToUse" : ["DONE", "REFUSED", "ADD_AWAITING"]
         }
     },
     "FCB": {
         "notifications" : {
             "monitorNotifications" : true,
-            "folderStatusToUse" : ["ERROR", "DONE", "REFUSED", "CLOSED"]
+            "folderStatusToUse" : ["DONE", "REFUSED"]
         }
     }
 }
