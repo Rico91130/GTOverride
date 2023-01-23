@@ -107,6 +107,12 @@
             "folderStatusToUse" : ["ERROR", "SI_INTG_ERROR", "DONE"]
         }
     },
+    "recensementCitoyen" : {
+        "notifications" : {
+            "monitorNotifications" : true,
+            "folderStatusToUse" : ["ERROR", "SI_INTG_ERROR", "DONE", "REFUSED"]
+        }
+    },
     "DICPE": {
         "status": ["PENDING", "SENT", "CANCELLED", "ERROR"]
     },
