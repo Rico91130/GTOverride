@@ -26,35 +26,37 @@ const helper = (function () {
     }
     
     /* Lire la configuration */
-    function readConfig(context, _key, useGlobal, useDefault)
+    function readConfig(context, _key, useTemplateValue, defaultValue)
     {
-        if (useGlobal == null)
-            useGlobal = true;
+        useTemplateValue = useTemplateValue ?? true;
 
         var keys = _key.split(".");
-        
-        var value = null;
+        var value = defaultValue;
         var read = false;
         
-        if (configCheckNested(CONFIG, [context].concat(keys))) {
-            value = eval("CONFIG." +  [context].concat(keys).join("."));
+        if (configCheckNested(CONFIG, ["demarches", context].concat(keys))) {
+            value = eval("CONFIG." +  ["demarches", context].concat(keys).join("."));
             read = true;
         } 
     
         if (!read)
         {
             /*
-            * Dans le cas d'un contexte "GLOBAL", on ne doit pas passer par ce code,
+            * Dans certains context, on ne doit pas passer par ce code,
             * car l'utilisation du modèle par défaut ne concerne que le contexte des démarches
             */
-            if (context != "GLOBAL" && useGlobal && configCheckNested(CONFIG, ["GLOBAL", "DEFAULT_MODEL"].concat(keys)))
+            if (!["GLOBAL", "templates"].includes(context)  && useTemplateValue)
             {
-                value = eval("CONFIG." +  ["GLOBAL", "DEFAULT_MODEL"].concat(keys).join("."));
+                var defaultTemplate = "DEFAULT";
+
+                /* On regarde si il existe un template à utiliser (autrement, utilisation de DEFAULT) */
+                if (configCheckNested(CONFIG, [context, "defaultTemplate"]))
+                    defaultTemplate = CONFIG[context].defaultTemplate;
+                    
+                if (configCheckNested(CONFIG, ["templates", defaultTemplate].concat(keys)))
+                    value = eval("CONFIG." +  ["templates", defaultTemplate].concat(keys).join("."));
+                
             }
-            else
-            {
-                value = useDefault;
-            }  
         }
 
         return value;
@@ -291,9 +293,13 @@ function displayPerimeter() {
             _FOLDER_STATUS = _FOLDER_STATUS.filter( function( el ) { return FOLDER_STATUS.includes(el) });
         }
 
+        var template = helper.readConfig(demarche, "defaultTemplate", false, "DEFAULT");
+        template = CONFIG.templates[template].templateName;
+
         document.body.innerHTML += `
             <div class='menuBar'>
                 <span class='demarcheName ` + demarche + `'>` + helper.readConfig(demarche, "displayName", false, demarche) + `</span>
+                <span class='templateName'>` + template + `</span>
             </div>
             <div class='menuBar'>
                 <span class='subTitle'>1 - Status des folders par date de mise à jour</span>
@@ -1025,7 +1031,7 @@ function initialize() {
     var link  = document.createElement('link');
     link.rel  = 'stylesheet';
     link.type = 'text/css';
-    link.href = EXTERNAL_RESSOURCES + "/supervision.css";
+    link.href = EXTERNAL_RESSOURCES + "/supervision.css?" + ((new Date()).getTime());
     link.media = 'all';
     head.appendChild(link);
 
@@ -1039,10 +1045,11 @@ function initialize() {
     /* On map la popin d'attente à la file d'appel Ajax */
     Progressbar.setManager(CustomProgressbarManager_queuedFetch);
 
-    queuedFetch.addRequest({"url" : EXTERNAL_RESSOURCES + "configuration.json?" + (new Date().getTime())}, getConfigurationComplete);
+    /* Chargement du fichier de configuration de base */
+    queuedFetch.addRequest({"url" : EXTERNAL_RESSOURCES + "configuration.json?" + (new Date().getTime())}, init_getBaseConfigurationComplete);
 }
 
-function getConfigurationComplete(items)
+function init_getBaseConfigurationComplete(items)
 {
     CONFIG = items[0].response;
 
@@ -1057,6 +1064,56 @@ function getConfigurationComplete(items)
         }
     });
 
+    /*
+     * On charge les templates
+     */
+    var queries = [];
+    CONFIG.GLOBAL.loadTemplatesConfiguration.forEach(templateId => {
+        queries.push({
+            "url" : EXTERNAL_RESSOURCES + "/configuration.template." + templateId + ".json?" + (new Date().getTime()),
+            "templateId" : templateId
+        });
+    });
+    queuedFetch.addRequest(queries, init_getTemplatesConfigurationComplete);
+}
+
+function init_getTemplatesConfigurationComplete(items)
+{
+    if (!CONFIG.hasOwnProperty("templates"))
+        CONFIG.templates = {};
+
+    items.forEach(item => {
+        if (item.response.hasOwnProperty(item.query.templateId))
+            CONFIG.templates[item.query.templateId] = item.response[item.query.templateId];
+        else
+            throw new Error("Unable to get templateId : '" + item.query.templateId + "' from " + item.query.url);
+    });
+
+    /*
+     * On charge les fichiers de définition des démarches
+     */
+    var queries = [];
+    CONFIG.GLOBAL.loadDemarchesConfiguration.forEach(demarcheFile => {
+        queries.push({
+            "url" : EXTERNAL_RESSOURCES + "/configuration.demarches." + demarcheFile + ".json?" + (new Date().getTime())
+        });
+    });
+    queuedFetch.addRequest(queries, init_getDemarchesConfigurationComplete);
+}
+
+function init_getDemarchesConfigurationComplete(items)
+{
+    if (!CONFIG.hasOwnProperty("demarches"))
+    CONFIG.demarches = {};
+
+    items.forEach(item => {
+        Object.keys(item.response).forEach(key => {
+            if (CONFIG.demarches.hasOwnProperty(key))
+                throw new Error("Demarche '" + key + "' already exists. Unable to add definition from " + item.query.url); 
+
+            CONFIG.demarches[key] = item.response[key];
+        });
+    });
 
     /* Construction du menu */
     var menuHTML = `
@@ -1077,6 +1134,7 @@ function getConfigurationComplete(items)
 
     document.body.innerHTML += menuHTML;
 }
+
 
 function loadPerimeter(index)
 {
