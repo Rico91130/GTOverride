@@ -1,6 +1,6 @@
 {
     "GLOBAL": {
-        "TEMPLATES" : ["DEFAULT", "AEC_DDPACS_RCO_DHTOUR"],
+        "loadTemplates" : ["DEFAULT", "AEC_DDPACS_RCO_DHTOUR"],
         "GTpageSizeLimit" : 1000,
         "notificationStatusToMonitor" : ["ERROR", "PENDING"],
         "detailsBatchSize": 1000,
