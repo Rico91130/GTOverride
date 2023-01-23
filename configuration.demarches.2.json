@@ -1,0 +1,27 @@
+{
+  "DICPE": {
+        "defaultTemplate" : "GUN"
+    },
+    "EICPE": {
+        "defaultTemplate" : "GUN"
+    },
+    "DAENV": {
+        "defaultTemplate" : "GUN"
+    },
+    "DIOTA": {
+        "defaultTemplate" : "GUN"
+    },
+    "arnaqueInternet": {
+        "displayName": "Arnaque Internet",
+        "notifications" : {
+            "monitorNotifications" : true,
+            "folderStatusToUse" : ["DONE", "REFUSED", "ADD_AWAITING"]
+        }
+    },
+    "FCB": {
+        "notifications" : {
+            "monitorNotifications" : true,
+            "folderStatusToUse" : ["DONE", "REFUSED"]
+        }
+    }
+}
