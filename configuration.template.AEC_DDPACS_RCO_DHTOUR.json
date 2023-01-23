@@ -1,6 +1,6 @@
 {
     "AEC_DDPACS_RCO_DHTOUR": {
-        "modelName" : "AEC/DDPACS/RCO/DHTOUR MODEL",
+        "templateName" : "AEC/DDPACS/RCO/DHTOUR MODEL",
         "status": ["HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SENT", "SI_RECEIVED", "IN_PROGRESS", "DONE", "REFUSED", "CLOSED", "PENDING", "SI_INTG_ERROR", "ERROR"],
         "highlights": {
             "ERROR": ["*"],
