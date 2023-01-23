@@ -22,30 +22,5 @@
         "disableComputeForTimeDivision": ["TD_next30days", "TD_remainingDays"],
         "perimeters": [ { "name": "Démarches Eric", "demarches": ["DICPE", "EICPE", "DAENV", "DIOTA", "FCB", "arnaqueInternet"] },
                         { "name": "Démarches Vanessa", "demarches": ["MD", "CR", "OperationTranquilliteVacances", "PUBCHGTNOM", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] }]
-    },
-    "DICPE": {
-        "defaultTemplate" : "GUN"
-    },
-    "EICPE": {
-        "defaultTemplate" : "GUN"
-    },
-    "DAENV": {
-        "defaultTemplate" : "GUN"
-    },
-    "DIOTA": {
-        "defaultTemplate" : "GUN"
-    },
-    "arnaqueInternet": {
-        "displayName": "Arnaque Internet",
-        "notifications" : {
-            "monitorNotifications" : true,
-            "folderStatusToUse" : ["DONE", "REFUSED", "ADD_AWAITING"]
-        }
-    },
-    "FCB": {
-        "notifications" : {
-            "monitorNotifications" : true,
-            "folderStatusToUse" : ["DONE", "REFUSED"]
-        }
     }
 }
