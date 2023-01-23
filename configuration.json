@@ -20,7 +20,7 @@
                                         "lastStatusUpdate",
                                         "updateStatusError"],
         "disableComputeForTimeDivision": ["TD_next30days", "TD_remainingDays"],
-        "perimeters": [ { "name": "Démarches Eric", "demarches": ["DICPE", "EICPE", "DAENV", "DIOTA", "FCB", "arnaqueInternet"] },
+        "perimeters": [ { "name": "Démarches Eric", "demarches": ["GUN", "DICPE", "EICPE", "DAENV", "DIOTA", "FCB", "arnaqueInternet"] },
                         { "name": "Démarches Vanessa", "demarches": ["MD", "CR", "OperationTranquilliteVacances", "PUBCHGTNOM", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] }]
     }
 }
