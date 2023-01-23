@@ -1,5 +1,6 @@
 {
     "GLOBAL": {
+        "DEMARCHE_TEMPLATE" : ["DEFAULT_MODEL", "AEC_DDPACS_RCO_DHTOUR"],
         "DEFAULT_MODEL": {
             "status": ["HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SENT", "SI_RECEIVED", "IN_PROGRESS", "DONE", "REFUSED", "CLOSED", "PENDING", "SI_INTG_ERROR", "ERROR"],
             "highlights": {
