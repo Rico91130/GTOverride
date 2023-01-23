@@ -296,10 +296,12 @@ function displayPerimeter() {
         var template = helper.readConfig(demarche, "defaultTemplate", false, "DEFAULT");
         template = CONFIG.templates[template].templateName;
 
+        var agregat = (helper.readConfig(demarche, "GTName").indexOf(",") != 1)
+
         document.body.innerHTML += `
             <div class='menuBar'>
                 <span class='demarcheName ` + demarche + `'>` + helper.readConfig(demarche, "displayName", false, demarche) + `</span>
-                <span class='templateName'>` + template + `</span>
+                <span class='templateName'>` + template + `</span>` + (agregat ? `<span class='templateName'>Agrégat : ` + helper.readConfig(demarche, "GTName") : `` ) + `</span>
             </div>
             <div class='menuBar'>
                 <span class='subTitle'>1 - Status des folders par date de mise à jour</span>
