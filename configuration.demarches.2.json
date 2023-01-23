@@ -1,27 +1,39 @@
 {
-  "DICPE": {
-        "defaultTemplate" : "GUN"
+    "GUN": {
+        "GTName" : "DICPE,EICPE,DAENV,DIOTA",
+        "displayName" :  "Démarches GUN",
+        "defaultTemplate": "GUN"
+    },
+    "DICPE": {
+        "defaultTemplate": "GUN"
     },
     "EICPE": {
-        "defaultTemplate" : "GUN"
+        "defaultTemplate": "GUN"
     },
     "DAENV": {
-        "defaultTemplate" : "GUN"
+        "defaultTemplate": "GUN"
     },
     "DIOTA": {
-        "defaultTemplate" : "GUN"
+        "defaultTemplate": "GUN"
     },
     "arnaqueInternet": {
         "displayName": "Arnaque Internet",
-        "notifications" : {
-            "monitorNotifications" : true,
-            "folderStatusToUse" : ["DONE", "REFUSED", "ADD_AWAITING"]
+        "notifications": {
+            "monitorNotifications": true,
+            "folderStatusToUse": [
+                "DONE",
+                "REFUSED",
+                "ADD_AWAITING"
+            ]
         }
     },
     "FCB": {
-        "notifications" : {
-            "monitorNotifications" : true,
-            "folderStatusToUse" : ["DONE", "REFUSED"]
+        "notifications": {
+            "monitorNotifications": true,
+            "folderStatusToUse": [
+                "DONE",
+                "REFUSED"
+            ]
         }
     }
 }
