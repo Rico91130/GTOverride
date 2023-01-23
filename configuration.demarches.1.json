@@ -79,7 +79,7 @@
             "folderStatusToUse" : ["DONE", "REFUSED"]
         }
     },
-    "EtatCivil" : {
+    "HebergementTourisme" : {
         "defaultTemplate" : "AEC_DDPACS_RCO_DHTOUR",
     }
 }
