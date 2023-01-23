@@ -82,8 +82,11 @@
   } 
 
   .menuBar .templateName {
-    
-    font-size:0.8em;    
+    font-size: 0.8em;
+    margin-top: 16px;
+    padding: 2px;
+    background: #7cbdff;
+    color: white;  
   }
 
   .menuBar .subTitle.small {
