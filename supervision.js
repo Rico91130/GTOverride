@@ -1034,7 +1034,7 @@ function initialize() {
     /* On map la popin d'attente à la file d'appel Ajax */
     Progressbar.setManager(CustomProgressbarManager_queuedFetch);
 
-    queuedFetch.addRequest({"url" : EXTERNAL_RESSOURCES + "configuration.json"}, getConfigurationComplete);
+    queuedFetch.addRequest({"url" : EXTERNAL_RESSOURCES + "configuration.json?" + (new Date().getTime())}, getConfigurationComplete);
 }
 
 function getConfigurationComplete(items)
