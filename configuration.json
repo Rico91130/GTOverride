@@ -1,6 +1,7 @@
 {
     "GLOBAL": {
-        "loadTemplates" : ["DEFAULT", "GUN", "AEC_DDPACS_RCO_DHTOUR"],
+        "loadTemplatesConfiguration" : ["DEFAULT", "GUN", "AEC_DDPACS_RCO_DHTOUR"],
+        "loadDemarchesConfiguration" : ["1", "2"]
         "GTpageSizeLimit" : 1000,
         "notificationStatusToMonitor" : ["ERROR", "PENDING"],
         "detailsBatchSize": 1000,
@@ -21,80 +22,6 @@
         "disableComputeForTimeDivision": ["TD_next30days", "TD_remainingDays"],
         "perimeters": [ { "name": "Démarches Eric", "demarches": ["DICPE", "EICPE", "DAENV", "DIOTA", "FCB", "arnaqueInternet"] },
                         { "name": "Démarches Vanessa", "demarches": ["MD", "CR", "OperationTranquilliteVacances", "PUBCHGTNOM", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] }]
-    },
-    "CR" : {
-        "status" : ["HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SI_RECEIVED", "IN_PROGRESS", "DONE", "REFUSED", "CLOSED", "PENDING", "SI_INTG_ERROR", "ERROR"],
-        "highlights" : {
-            "ERROR": ["*"],
-            "SI_INTG_ERROR": ["*"],
-            "PENDING": ["*"],
-            "HUBEE_RECEIVED": ["TD_yesterday", "TD_beforeYesterday", "TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "HUBEE_NOTIFIED": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "SI_RECEIVED": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "IN_PROGRESS": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "DONE": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "REFUSED": ["TD_yesterday", "TD_beforeYesterday","TD_next7days", "TD_next30days", "TD_remainingDays"]
-        },
-        "notifications" : {
-            "monitorNotifications" : true,
-            "folderStatusToUse" : ["DONE", "REFUSED"]
-        }
-    },
-    "MD" : {
-        "status" : ["HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SI_RECEIVED", "IN_PROGRESS", "DONE", "REFUSED", "CLOSED", "PENDING", "SI_INTG_ERROR", "ERROR"],
-        "highlights" : {
-            "ERROR": ["*"],
-            "SI_INTG_ERROR": ["*"],
-            "PENDING": ["*"],
-            "HUBEE_RECEIVED": ["TD_yesterday", "TD_beforeYesterday", "TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "HUBEE_NOTIFIED": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "SI_RECEIVED": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "IN_PROGRESS": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "DONE": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "REFUSED": ["TD_yesterday", "TD_beforeYesterday","TD_next7days", "TD_next30days", "TD_remainingDays"]
-        },
-        "notifications" : {
-            "monitorNotifications" : true,
-            "folderStatusToUse" : ["DONE", "REFUSED"]
-        }
-    },
-    "OperationTranquilliteVacances" : {
-        "status" : ["HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SI_RECEIVED", "DONE", "REFUSED", "CLOSED", "PENDING", "SI_INTG_ERROR", "ERROR"],
-        "highlights" : {
-            "ERROR": ["*"],
-            "SI_INTG_ERROR": ["*"],
-            "PENDING": ["*"],
-            "HUBEE_RECEIVED": ["TD_yesterday", "TD_beforeYesterday", "TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "HUBEE_NOTIFIED": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "SI_RECEIVED": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "DONE": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "REFUSED": ["TD_yesterday", "TD_beforeYesterday","TD_next7days", "TD_next30days", "TD_remainingDays"]
-        }
-    },
-    "PUBCHGTNOM" : {
-        "GTName" : "pub-changement-nom",
-        "status" : ["HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SI_RECEIVED", "DONE", "REFUSED", "CLOSED", "PENDING", "SI_INTG_ERROR", "ERROR"],
-        "highlights" : {
-            "ERROR": ["*"],
-            "SI_INTG_ERROR": ["*"],
-            "PENDING": ["*"],
-            "HUBEE_RECEIVED": ["TD_yesterday", "TD_beforeYesterday", "TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "HUBEE_NOTIFIED": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "SI_RECEIVED": ["TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "DONE": ["TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"],
-            "REFUSED": ["TD_yesterday", "TD_beforeYesterday","TD_next7days", "TD_next30days", "TD_remainingDays"]
-        },
-        "notifications" : {
-            "monitorNotifications" : true,
-            "folderStatusToUse" : ["DONE"]
-        }
-    },
-    "recensementCitoyen" : {
-        "defaultTemplate" : "AEC_DDPACS_RCO_DHTOUR",
-        "notifications" : {
-            "monitorNotifications" : true,
-            "folderStatusToUse" : ["DONE", "REFUSED"]
-        }
     },
     "DICPE": {
         "defaultTemplate" : "GUN"
