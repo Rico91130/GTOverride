@@ -1,0 +1,13 @@
+{
+    "GUN": {
+        "templateName" : "GUN TEMPLATE",
+        "status": ["PENDING", "SENT", "CANCELLED", "ERROR"],
+        "highlights": {
+            "ERROR": ["*"],
+            "PENDING": ["TD_yesterday", "TD_beforeYesterday", "TD_yesterday", "TD_beforeYesterday", "TD_next7days", "TD_next30days", "TD_remainingDays"]
+        },
+        "notifications" : {
+            "monitorNotifications" : false
+        }
+    }
+  }
