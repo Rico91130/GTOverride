@@ -101,7 +101,7 @@
         },
         "notifications" : {
             "monitorNotifications" : true,
-            "folderStatusToUse" : ["IN_PROGRESS", "ERROR", "SI_INTG_ERROR", "DONE"]
+            "folderStatusToUse" : ["ERROR", "SI_INTG_ERROR", "DONE"]
         }
     },
     "DICPE": {
