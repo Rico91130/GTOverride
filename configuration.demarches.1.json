@@ -67,19 +67,19 @@
         }
     },
     "EtatCivil" : {
-        "defaultTemplate" : "AEC_DDPACS_RCO_DHTOUR",
+        "defaultTemplate" : "AEC_DDPACS_RCO_DHTOUR"
     },
     "depotDossierPACS" : {
-        "defaultTemplate" : "AEC_DDPACS_RCO_DHTOUR",
+        "defaultTemplate" : "AEC_DDPACS_RCO_DHTOUR"
     },
     "recensementCitoyen" : {
-        "defaultTemplate" : "AEC_DDPACS_RCO_DHTOUR",
+        "defaultTemplate" : "AEC_DDPACS_RCO_DHTOUR"
         "notifications" : {
             "monitorNotifications" : true,
             "folderStatusToUse" : ["DONE", "REFUSED"]
         }
     },
     "HebergementTourisme" : {
-        "defaultTemplate" : "AEC_DDPACS_RCO_DHTOUR",
+        "defaultTemplate" : "AEC_DDPACS_RCO_DHTOUR"
     }
 }
