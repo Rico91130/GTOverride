@@ -15,8 +15,7 @@
             "REFUSED": ["TD_next7days", "TD_next30days", "TD_remainingDays"]
         },
         "notifications" : {
-            "monitorNotifications" : false,
-            "folderStatusToUse" : ["ERROR", "SI_INTG_ERROR", "DONE", "REFUSED", "ADD_AWAITING"]
+            "monitorNotifications" : false
         }
     }
   }
