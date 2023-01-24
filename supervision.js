@@ -50,8 +50,8 @@ const helper = (function () {
                 var defaultTemplate = "DEFAULT";
 
                 /* On regarde si il existe un template à utiliser (autrement, utilisation de DEFAULT) */
-                if (configCheckNested(CONFIG, [context, "defaultTemplate"]))
-                    defaultTemplate = CONFIG[context].defaultTemplate;
+                if (configCheckNested(CONFIG, ["demarches", context, "defaultTemplate"]))
+                    defaultTemplate = CONFIG.demarches[context].defaultTemplate;
                     
                 if (configCheckNested(CONFIG, ["templates", defaultTemplate].concat(keys)))
                     value = eval("CONFIG." +  ["templates", defaultTemplate].concat(keys).join("."));
