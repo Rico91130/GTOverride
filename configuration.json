@@ -21,6 +21,6 @@
                                         "updateStatusError"],
         "disableComputeForTimeDivision": ["TD_next30days", "TD_remainingDays"],
         "perimeters": [ { "name": "Démarches Eric", "demarches": ["GUN", "DICPE", "EICPE", "DAENV", "DIOTA", "FCB", "arnaqueInternet"] },
-                        { "name": "Démarches Vanessa", "demarches": ["CRMD", "MD", "CR", "OperationTranquilliteVacances", "PUBCHGTNOM", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] }]
+                        { "name": "Démarches Vanessa", "demarches": ["CRMD", "CR", "MD", "OperationTranquilliteVacances", "PUBCHGTNOM", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] }]
     }
 }
