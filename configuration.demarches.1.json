@@ -2,7 +2,7 @@
     "CRMD" : {
         "GTName" : "CR,MD",
         "defaultTemplate" : "CRMD",
-        "displayName" :  "Démarches CR et MD",
+        "displayName" :  "Démarches CR et MD"
     },
     "CR" : {
         "defaultTemplate" : "CRMD"
