@@ -296,7 +296,7 @@ function displayPerimeter() {
         var template = helper.readConfig(demarche, "defaultTemplate", false, "DEFAULT");
         template = CONFIG.templates[template].templateName;
 
-        var agregat = (helper.readConfig(demarche, "GTName").indexOf(",") != 1)
+        var agregat = (helper.readConfig(demarche, "GTName", false, "").indexOf(",") != 1)
 
         document.body.innerHTML += `
             <div class='menuBar'>
