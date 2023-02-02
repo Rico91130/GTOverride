@@ -16,7 +16,8 @@
         },
         "notifications" : {
             "monitorNotifications" : true,
-            "folderStatusToUse" : ["DONE", "REFUSED"]
+            "folderStatusToUse" : ["DONE", "REFUSED"],
+            "sampleSize" : 200
         }
     }
   }
