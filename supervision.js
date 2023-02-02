@@ -293,9 +293,19 @@ function displayPerimeter() {
             _FOLDER_STATUS = _FOLDER_STATUS.filter( function( el ) { return FOLDER_STATUS.includes(el) });
         }
 
+        /* Nom du template utilisée */
         var template = helper.readConfig(demarche, "defaultTemplate", false, "DEFAULT");
         template = CONFIG.templates[template].templateName;
 
+        /* On check si c'est un template modifié */
+        var customizedTemplate = (helper.readConfig(demarche, "status", false) != null) || 
+        (helper.readConfig(demarche, "highlights", false) != null) ||
+        (helper.readConfig(demarche, "notifications", false) != null);
+
+        if (template != "DEFAULT TEMPLATE" && customizedTemplate)
+            template += " (edité)";
+
+        /* Est-ce un agrégat de démarches */
         var agregat = (helper.readConfig(demarche, "GTName", false, "").indexOf(",") != -1);
 
         document.body.innerHTML += `
@@ -372,13 +382,15 @@ function displayPerimeter() {
             folderStatusToUse = folderStatusToUse.filter( function( el ) { return FOLDER_STATUS.includes(el) });
         }
 
+        var notificationsSize = Math.min(CONFIG.GLOBAL.GTpageSizeLimit, helper.readConfig(demarche, "notifications.sampleSize", true, CONFIG.GLOBAL.notificationsSize));
+
         document.body.innerHTML += `
             <div class='menuBar'>
                 <span class='subTitle'>2 - Notifications en anomalie, créees entre hier et aujourd'hui</span>
                 <span onclick='loadNotificationsData(this)' data-demarche='` + demarche + `' class='reloadIcon button interact'></span><br/>
                 <span class='subTitle small'>⚠️ Notifications en anomalie liées au changement de statut du dossier : ` + folderStatusToUse.join(", ") + `</span>
                 <span class='subTitle small'>⚠️ Pour les dossiers mis à jour : entre hier et aujourd'hui</span>
-                <span class='subTitle small'>⚠️ Limité aux notifications des ` + CONFIG.GLOBAL.notificationsSize + ` derniers dossiers correspondants</span>
+                <span class='subTitle small'>⚠️ Limité aux notifications des ` + notificationsSize + ` derniers dossiers correspondants</span>
             </div>`;
 
         html = `<table class='fl-table demarche ` + demarche + ` notifications'>
@@ -620,9 +632,8 @@ function loadNotificationsData(d)
     });
     document.querySelectorAll("table."+ demarche + ".notifications tbody tr td.alert").forEach(TD => TD.classList.remove("alert"));
 
-    var notificationsSize = Math.min(CONFIG.GLOBAL.GTpageSizeLimit, CONFIG.GLOBAL.notificationsSize);
+    var notificationsSize = Math.min(CONFIG.GLOBAL.GTpageSizeLimit, helper.readConfig(demarche, "notifications.sampleSize", true, CONFIG.GLOBAL.notificationsSize));
     var notificationStatusToMonitor = NOTIFICATIONS_STATUS.filter(NS => CONFIG.GLOBAL.notificationStatusToMonitor.includes(NS));
-    var folderStatusForNotificationsMonitoring;
 
     var query = {
         "url" : helper.buildQuery(QUERY_GETFOLDERS, {
