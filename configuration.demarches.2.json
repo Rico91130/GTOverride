@@ -19,6 +19,7 @@
     "arnaqueInternet": {
         "displayName": "Arnaque Internet",
         "notifications": {
+            "sampleSize" : 200,
             "monitorNotifications": true,
             "folderStatusToUse": [
                 "DONE",
