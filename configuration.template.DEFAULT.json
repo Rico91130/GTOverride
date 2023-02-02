@@ -16,7 +16,8 @@
         },
         "notifications" : {
             "monitorNotifications" : false,
-            "folderStatusToUse" : ["ERROR", "SI_INTG_ERROR", "DONE", "REFUSED", "ADD_AWAITING"]
+            "folderStatusToUse" : ["ERROR", "SI_INTG_ERROR", "DONE", "REFUSED", "ADD_AWAITING"],
+            "sampleSize" : 200
         }
     }
   }
