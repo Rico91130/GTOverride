@@ -492,7 +492,7 @@ function downloadDetails(d) {
             "url" : helper.buildQuery(QUERY_GETFOLDERS, {
                 "DEMARCHE" : helper.readConfig(demarche, "GTName", false, demarche),
                 "STATUS" : FS,
-                "STARTDATE" : TD.start,
+                "STARTDATE" : TD.start ?? "",
                 "ENDDATE" : TD.end ?? "", /* quand il n'y a pas de date de fin pour la TD "aujourd'hui" */
                 "PAGE" : page,
                 "PAGESIZE" : detailsBatchSizeBatchSize
