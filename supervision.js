@@ -800,7 +800,7 @@ var queuedFetch = (function () {
         /* Création d'un contexte d'exécution multirequêtes autoréférencé */
         var context = {"queries" : [], "callbackFunctionOnComplete" : f1, "callbackFunctionOnResponse" : f2};
 
-        os.forEach(o => context.queries.push({"query" : o, "retries" : 0, "done" : false, "result" : null}));
+        os.forEach(o => context.queries.push({"query" : o, "retries" : 0, "done" : false, "response" : null}));
         context.queries.forEach(q => {
                 q.context = context;
             });
@@ -831,7 +831,7 @@ var queuedFetch = (function () {
  
             activeCall++;
 
-            fetch(item.query.url)
+            fetch(item.query.url, {"headers": item.query.headers})
                 .then(res => res.json())
                 .then(response => {
                     onPromiseCompleteOrFailure();
