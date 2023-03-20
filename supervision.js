@@ -119,8 +119,8 @@ function _GTOverride() {
     const today = createNextFTD(new Date(), "TD_today", "Aujourd'hui", 0);
     const yesterday = createNextFTD(today, "TD_yesterday", "Hier", -1);
     const beforeYesterday = createNextFTD(yesterday, "TD_beforeYesterday", "Avant hier", -1);
-    const next7days = createNextFTD(beforeYesterday, "TD_next7days", "7 jours suivants", -7);
-    const next30days = createNextFTD(next7days, "TD_next30days", "30 jours suivants", -30);
+    const next7days = createNextFTD(beforeYesterday, "TD_next7days", "7 jours précédents", -7);
+    const next30days = createNextFTD(next7days, "TD_next30days", "30 jours précédents", -30);
     const remainingDays = createNextFTD(next30days, "TD_remainingDays", "Encore avant");
 
     FOLDER_TIME_DIVISIONS.push(today);
