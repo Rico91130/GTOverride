@@ -23,7 +23,7 @@
         "perimeters": [ { "name": "Démarches Eric", "demarches": ["GUN", "DICPE", "EICPE", "DAENV", "DIOTA", "FCB", "arnaqueInternet"] },
                         { "name": "Démarches Vanessa", "demarches": ["CRMD", "CR", "MD", "OperationTranquilliteVacances", "PUBCHGTNOM", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] },
                         { "name": "Démarches Antonio", "demarches": ["DAUA", "JeChangeDeCoordonnees"] },
-                        { "name": "Démarches Cathy", "demarches": ["INSRegistreFR"] }
+                        { "name": "Démarches Cathy", "demarches": ["INSRegistreFR", "delivrance_demat"] }
                        
                       ]
     }
