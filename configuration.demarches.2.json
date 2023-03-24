@@ -18,7 +18,7 @@
     },
     "arnaqueInternet": {
         "displayName": "Arnaque Internet",
-        "status": ["HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SENT", "SI_RECEIVED", "IN_PROGRESS", "DONE", "REFUSED", "CLOSED", "PENDING", "ADD_AWAITING", "ERROR"],
+        "status": ["HUBEE_RECEIVED", "HUBEE_NOTIFIED", "SENT", "SI_RECEIVED", "IN_PROGRESS", "ADD_AWAITING", "DONE", "REFUSED", "CLOSED", "PENDING", "ERROR"],
         "notifications": {
             "sampleSize" : 200,
             "monitorNotifications": true,
