@@ -1,7 +1,7 @@
 
 {
     "DAUA": {
-        "templateName" : "CR/MD TEMPLATE",
+        "templateName" : "DAUA TEMPLATE",
         "status" : ["SENT", "PENDING", "SI_INTG_ERROR", "ERROR", "SI_RECEIVED"],
         "highlights" : {
             "PENDING": ["*"],
