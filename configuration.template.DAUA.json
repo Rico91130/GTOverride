@@ -1,0 +1,17 @@
+
+{
+    "DAUA": {
+        "templateName" : "CR/MD TEMPLATE",
+        "status" : ["SENT", "PENDING", "SI_INTG_ERROR", "ERROR", "SI_RECEIVED"],
+        "highlights" : {
+            "PENDING": ["*"],
+            "SI_INTG_ERROR": ["*"],
+            "ERROR": ["*"]
+        },
+        "notifications" : {
+            "monitorNotifications" : false,
+            "folderStatusToUse" : ["DONE", "REFUSED"],
+            "sampleSize" : 200
+        }
+    }
+  }
