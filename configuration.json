@@ -1,6 +1,6 @@
 {
     "GLOBAL": {
-        "loadTemplatesConfiguration" : ["DEFAULT", "GUN", "AEC_DDPACS_RCO_DHTOUR", "CRMD"],
+        "loadTemplatesConfiguration" : ["DEFAULT", "GUN", "AEC_DDPACS_RCO_DHTOUR", "CRMD", "DAUA"],
         "loadDemarchesConfiguration" : ["1", "2"],
         "GTpageSizeLimit" : 1000,
         "notificationStatusToMonitor" : ["ERROR", "PENDING"],
