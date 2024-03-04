@@ -1,4 +1,6 @@
 {
+    "RenouvPasseport" : {
+    },
     "CRMD" : {
         "GTName" : "CR,MD",
         "defaultTemplate" : "CRMD",
