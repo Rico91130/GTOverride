@@ -1,6 +1,7 @@
 {
     "RenouvPasseport" : {
-        "GTName" : "RenouvPasseport"
+        "GTName" : "RenouvPasseport",
+        "displayName" :  "Renouvellement passeport"
     },
     "CRMD" : {
         "GTName" : "CR,MD",

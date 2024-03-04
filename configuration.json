@@ -21,7 +21,7 @@
                                         "updateStatusError"],
         "disableComputeForTimeDivision": ["TD_remainingDays"],
         "perimeters": [ { "name": "Démarches Eric", "demarches": ["GUN", "DICPE", "EICPE", "DAENV", "DIOTA", "FCB", "arnaqueInternet"] },
-                        { "name": "Démarches Vanessa", "demarches": ["CRMD", "CR", "MD", "OperationTranquilliteVacances", "PUBCHGTNOM", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] },
+                        { "name": "Démarches Vanessa", "demarches": ["RenouvPasseport","CRMD", "CR", "MD", "OperationTranquilliteVacances", "PUBCHGTNOM", "EtatCivil", "depotDossierPACS", "recensementCitoyen", "HebergementTourisme"] },
                         { "name": "Démarches Antonio", "demarches": ["DAUA", "JeChangeDeCoordonnees", "ChangementNomUsage", "DACIREXP", "DACIRORG"] },
                         { "name": "Démarches Patricia", "demarches": ["delivrance_demat", "delivrance_impr", "CIPHYTO", "OperationTranquilliteVacances", "PUBCHGTNOM", "certificat-non-pacs", "PVPP"] },
                         { "name": "Démarches Cathy", "demarches": ["INSRegistreFR", "delivrance_demat"] }
